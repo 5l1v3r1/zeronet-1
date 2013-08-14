@@ -18,21 +18,33 @@ class BaseAI():
     #  @brief How many turns it has been since the beginning of the game
     turn_number = None
 
-    #  @brief The name of this match on the server
-    game_name = None
-
     #  @brief Player Number; either 0 or 1 (0 is player 1 1 is player 2)
     player_id = None
 
-    #  @brief The time a player has when the game begins in seconds
-    start_time = None
+    #  @brief What number game this is for the server
+    game_number = None
 
-    #  @brief How much extra time a player gets when their turn begins
-    time_increment = None
+    #  @brief BaseCost used in the virus price formula
+    base_cost = None
+
+    #  @brief Scalar used in the virus price formula
+    scale_cost = None
+
+    #  @brief The width of the map (max X value)
+    width = None
+
+    #  @brief The height of the map (max Y value)
+    height = None
 
 
     #  @brief List containing all Players.
     players = []
+
+    #  @brief List containing all Bases.
+    bases = []
+
+    #  @brief List containing all Viruses.
+    viruses = []
 
     #  @brief List containing all Tiles.
     tiles = []
@@ -42,20 +54,28 @@ class BaseAI():
     def get_turn_number(self):
         return self.turn_number
 
-    #  @breif Accessor function for game_name
-    def get_game_name(self):
-        return self.game_name
-
     #  @breif Accessor function for player_id
     def get_player_id(self):
         return self.player_id
 
-    #  @breif Accessor function for start_time
-    def get_start_time(self):
-        return self.start_time
+    #  @breif Accessor function for game_number
+    def get_game_number(self):
+        return self.game_number
 
-    #  @breif Accessor function for time_increment
-    def get_time_increment(self):
-        return self.time_increment
+    #  @breif Accessor function for base_cost
+    def get_base_cost(self):
+        return self.base_cost
+
+    #  @breif Accessor function for scale_cost
+    def get_scale_cost(self):
+        return self.scale_cost
+
+    #  @breif Accessor function for width
+    def get_width(self):
+        return self.width
+
+    #  @breif Accessor function for height
+    def get_height(self):
+        return self.height
 
 
