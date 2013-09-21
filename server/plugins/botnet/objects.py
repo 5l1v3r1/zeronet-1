@@ -8,12 +8,17 @@ class Player(Game.Object):
     _relations = {}
     _remotes = {}
 
+    def __init__(self):
+        self.cycles = self.game.config['player']['cycles']
+        self.byte_dollars = self.game.config['player']['byte_dollars']
+        self.time = 0
+
     def before_turn(self):
         #TODO: Fill in start of turn values
         #Common example would be giving units moves before their turn
-        if self.id == self.game.playerID:
-            if self.game.turnNumber < self.game.turnLimit:
-                self.cycles += self.game.getIncome(self.id)
+        if self.id == self.game.player_id:
+            if self.game.turn_number < self.game.game_length:
+                    self.cycles += 10
         pass
 
     def after_turn(self):
@@ -70,9 +75,9 @@ class Virus(Game.Object):
         #TODO: Fill in start of turn values
         #Common example would be giving units moves before their turn
         if self.owner == self.game.player_id:
-            self.spawnsLeft = 1
+            self.moves_left = 1
         else:
-            self.spawnsLeft = 0
+            self.moves_left = 0
         pass
 
     def after_turn(self):
@@ -87,7 +92,7 @@ class Virus(Game.Object):
         player = self.game.player[self.owner]
         cost = self.game.virusCost(level)
 
-        if self.owner != self.game.playerID:
+        if self.owner != self.game.player_id:
             return "You cannot spawn a virus at the opponents base."
         elif level < 0:
             return "A virus must have a level greater than zero."
@@ -116,9 +121,9 @@ class Base(Game.Object):
         #Common example would be giving units moves before their turn
 
         if self.owner == self.game.player_id:
-            self.movesLeft = 1
+            self.spawns_left = 1
         else:
-            self.movesLeft = 0
+            self.spawns_left = 0
         return
 
     def after_turn(self):
@@ -155,7 +160,7 @@ class Base(Game.Object):
                         return "You cannot combine units of different levels."
                     else:
                         virus.level += 1
-                        virus.movesLeft = 0
+                        virus.moves_left = 0
                         self.game.remove_object(self)
                         return True
                 else:

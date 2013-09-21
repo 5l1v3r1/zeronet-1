@@ -20,7 +20,7 @@ class AI(BaseAI):
     ## @fn run
     #  @breif Function is ran for each turn.
     def run(self):
-        for base in self.bases():
+        for base in self.bases:
             if base.owner == self.my_player_id and base.spawnsLeft > 0:
                 base.spawn(0)
 
