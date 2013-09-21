@@ -27,6 +27,25 @@ class Game(game_objects.Game):
         #Setting current player's units to ready to move/attack
         #Start of turn income
         #Creating units whose construction began previously
+
+        #self.turn_number += 1
+        if self.turn == self.players[0]:
+            self.turn = self.players[1]
+            self.player_id = 1
+        elif self.turn == self.players[1]:
+            self.turn = self.players[0]
+            self.player_id = 0
+        else:
+            return "Game is over."
+
+        for obj in self.values():
+            obj.next_turn()
+
+        if self.turn_number % 2 == 0:
+            score = [10, 10]
+            self.players[0].byteDollars += score[0]
+            self.players[1].byteDollars += score[1]
+
         pass
 
     def after_turn(self):
@@ -42,6 +61,19 @@ class Game(game_objects.Game):
 
     def check_winner(self):
         #TODO: Calculate if anyone has won and return the winner and reason
+
+        player1 = self.player[0]
+        player2 = self.player[1]
+
+        if self.turn_number >= self.turn_limit:
+            if player1.byteDollars > player2.byteDollars:
+                print("0 Wins")
+            elif player2.byteDollars > player1.byteDollars:
+                print("1 Wins")
+            else:
+                print("A Tie!")
+
+
         if self.turn_number >= self.game_length:
             return self.players[0], 'won due to tie'
         else:
