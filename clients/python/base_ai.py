@@ -54,13 +54,13 @@ class BaseAI():
     # @brief List containing all Bases.
     bases = []
 
-    ##  @var viruses
-    # @brief List containing all Viruses.
-    viruses = []
-
     ##  @var tiles
     # @brief List containing all Tiles.
     tiles = []
+
+    ##  @var viruses
+    # @brief List containing all Viruses.
+    viruses = []
 
 
     ## @fn get_turn_number
