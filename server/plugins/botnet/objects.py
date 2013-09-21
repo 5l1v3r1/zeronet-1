@@ -61,8 +61,8 @@ class Tile(Game.Object):
         pass
 
 
-class Base(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y', 'owner', 'spawns_left']
+class Virus(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y', 'owner', 'level', 'moves_left', 'living']
     _relations = {}
     _remotes = {}
 
@@ -106,8 +106,8 @@ class Base(Game.Object):
         return True;
 
 
-class Virus(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y', 'owner', 'level', 'moves_left', 'living']
+class Base(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y', 'owner', 'spawns_left']
     _relations = {}
     _remotes = {}
 
