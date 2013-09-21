@@ -2,6 +2,7 @@ from collections import defaultdict
 import os
 import json
 from logger import Logger
+from util import uncamel
 
 #Future proof a bit
 try:
@@ -14,9 +15,25 @@ except ImportError:
 class GameObjectMeta(type):
     def __new__(meta, name, bases, dct):
         if '_name' not in dct:
-            dct['_name'] = name.lower()
+            dct['_name'] = uncamel(name)
         if '_plural' not in dct:
             dct['_plural'] = dct['_name'] + 's'
+        if '_relations' in dct:
+            for key in dct['_relations']:
+                @property
+                def getter(self, key=key):
+                    id = getattr(self, key+'_id')
+                    return self.game.objects.get(id, None)
+                @getter.setter
+                def getter(self, value, key=key):
+                    return setattr(self, key+'_id', value.id)
+                dct[key] = getter
+        if '_remotes' in dct:
+            for key, source in dct['_remotes'].items():
+                @property
+                def getter(self, key=key, source=source):
+                    return getattr(getattr(self, source), key)
+                dct[key] = getter
         cls = type.__new__(meta, name, bases, dct)
         #record the type in its game
         cls._game._object_types[name] = cls
@@ -24,14 +41,14 @@ class GameObjectMeta(type):
 
 class GameObject(object):
     # Root game object
-    game_state_attributes = set()
+    _game_state_attributes = set()
 
     def __init__(self, game, **attributes):
         #Bypass the __setattr__ method when setting the game
         object.__setattr__(self, 'game', game)
         self._new = True
 
-        for key in self.game_state_attributes:
+        for key in self._game_state_attributes:
             setattr(self, key, None)
         #And the initial id, so id is defined
         object.__setattr__(self, 'id', game.next_id())
@@ -39,21 +56,23 @@ class GameObject(object):
         game.add_object(self)
         self.removed = False
         for key, value in attributes.items():
-            if key in self.game_state_attributes:
+            if key in self._game_state_attributes:
                 setattr(self, key, value)
 
     def __setattr__(self, name, value):
         #We need to record changes for the game logs
+        old = getattr(self, name, None)
         object.__setattr__(self, name, value)
         if self.game and \
                 not self._new and \
                 self.id in self.game.objects and \
-                name in self.game_state_attributes:
+                name in self._game_state_attributes and \
+                old != value:
             self.game.changes[self.id][name] = value
 
     def jsonize(self):
         attributes = dict((key, getattr(self, key))
-                          for key in self.game_state_attributes)
+                          for key in self._game_state_attributes)
         attributes['id'] = self.id
         return attributes
 
@@ -61,8 +80,25 @@ class GameObject(object):
         self.removed = True
         del self.game.objects[self.id]
 
+
+    def before_turn(self):
+        pass
+
+    def after_turn(self):
+        pass
+
 class GameMeta(type):
     def __new__(meta, name, bases, dct):
+        if '_relations' in dct:
+            for key in dct['_relations']:
+                @property
+                def getter(self, key=key):
+                    id = getattr(self, key+'_id')
+                    return self.objects.get(id, None)
+                @getter.setter
+                def getter(self, value, key=key):
+                    return setattr(self, key+'_id', value.id)
+                dct[key] = getter
         cls = type.__new__(meta, name, bases, dct)
         cls._object_types = {}
         class Object(GameObject):
@@ -77,6 +113,8 @@ class Game(object):
     _object_types = {}
     _globals = []
     __metaclass__ = GameMeta
+    start_time = 10
+    time_inc = 1
     # Shell game to show interaction
     def __init__(self, details):
         self.highest_id = -1
@@ -90,7 +128,7 @@ class Game(object):
         self.connections = []
         self.state = 'new'
         self.details = details
-        self._game_name = details['game_name']
+        self.game_name = details['game_name']
         self.logger = Logger(self)
 
         for i in self._globals:
@@ -166,6 +204,7 @@ class Game(object):
         for i in self.connections:
             Player = self._object_types['Player']
             player = Player(self, name = i.connection.username)
+            player.time = self.start_time
 
             #Link the player to the connection, so we can easily associate them
             player._connection = i
@@ -181,13 +220,18 @@ class Game(object):
         self.turn_number += 1
         self.player_id = self.turn_number % 2
         self.current_player = self.players[self.player_id]
+        self.current_player.time += self.time_inc
         self.before_turn()
+        for i in self.objects.values():
+            i.before_turn()
         self.flush()
         self.send_all({'type': 'start_turn'})
 
     def end_turn(self):
         self.send_all({'type': 'end_turn'})
         self.after_turn()
+        for i in self.objects.values():
+            i.after_turn()
         self.flush()
 
         winner, reason = self.check_winner()
@@ -217,7 +261,7 @@ class Game(object):
         if '.' not in name:
             name += '.cfg'
         path = os.path.join('plugins', self._name, 'config',  name)
-        
+
         parser = ConfigParser()
         parser.optionxform = str
         parser.readfp(open(path))
@@ -226,8 +270,6 @@ class Game(object):
         for s in parser.sections():
             config[s] = {key:parse(value) for key, value in parser.items(s)}
         return config
-
-        
 
 
 class ObjectHolder(dict):
