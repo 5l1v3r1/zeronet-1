@@ -158,12 +158,12 @@ class Game:
         if change.get("type") == "Base":
             temp = game_objects.Base(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"), spawns_left=values.get("spawns_left"))
             self.ai.bases.append(temp)
-        if change.get("type") == "Virus":
-            temp = game_objects.Virus(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"), level=values.get("level"), moves_left=values.get("moves_left"), living=values.get("living"))
-            self.ai.viruses.append(temp)
         if change.get("type") == "Tile":
             temp = game_objects.Tile(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"))
             self.ai.tiles.append(temp)
+        if change.get("type") == "Virus":
+            temp = game_objects.Virus(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"), level=values.get("level"), moves_left=values.get("moves_left"), living=values.get("living"))
+            self.ai.viruses.append(temp)
         return True
 
     #Parse the remove action.
@@ -184,18 +184,18 @@ class Game:
             self.ai.bases.remove(index)
             return True
         try:
-            index = self.ai.viruses.find(remove_id, key=operator.attrgetter('id'))
-        except:
-            pass
-        else:
-            self.ai.viruses.remove(index)
-            return True
-        try:
             index = self.ai.tiles.find(remove_id, key=operator.attrgetter('id'))
         except:
             pass
         else:
             self.ai.tiles.remove(index)
+            return True
+        try:
+            index = self.ai.viruses.find(remove_id, key=operator.attrgetter('id'))
+        except:
+            pass
+        else:
+            self.ai.viruses.remove(index)
             return True
         return False
 
@@ -218,18 +218,18 @@ class Game:
             self.ai.bases[index].__dict__.update(values)
             return True
         try:
-            index = self.ai.viruses.find(change_id, key=operator.attrgetter('id'))
-        except:
-            pass
-        else:
-            self.ai.viruses[index].__dict__.update(values)
-            return True
-        try:
             index = self.ai.tiles.find(change_id, key=operator.attrgetter('id'))
         except:
             pass
         else:
             self.ai.tiles[index].__dict__.update(values)
+            return True
+        try:
+            index = self.ai.viruses.find(change_id, key=operator.attrgetter('id'))
+        except:
+            pass
+        else:
+            self.ai.viruses[index].__dict__.update(values)
             return True
         return False
 
