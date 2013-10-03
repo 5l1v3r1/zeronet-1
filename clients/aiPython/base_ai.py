@@ -50,6 +50,10 @@ class BaseAI():
     # @brief List containing all Players.
     players = []
 
+    ##  @var viruses
+    # @brief List containing all Viruses.
+    viruses = []
+
     ##  @var bases
     # @brief List containing all Bases.
     bases = []
@@ -57,10 +61,6 @@ class BaseAI():
     ##  @var tiles
     # @brief List containing all Tiles.
     tiles = []
-
-    ##  @var viruses
-    # @brief List containing all Viruses.
-    viruses = []
 
 
     ## @fn get_turn_number

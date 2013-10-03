@@ -103,6 +103,81 @@ class Player(GameObject):
 
 
 
+## @class Virus
+#  @brief Stores the information about a virus
+class Virus(Mappable):
+
+    def __init__(self, connection, parent_game, id, x, y, owner, level, moves_left, living):
+        self._connection = connection
+        self._parent_game = parent_game
+        self._id = id
+        self._x = x
+        self._y = y
+        self._owner = owner
+        self._level = level
+        self._moves_left = moves_left
+        self._living = living
+
+    ## @fn move
+    #  @param x The x coordinate to move to
+    #  @param y The y coordinate to move to
+    def move(self, x, y):
+        function_call = client_json.function_call.copy()
+        function_call.update({"type": 'move'})
+        function_call.get("args").update({"actor": self.id})
+        function_call.get("args").update({'x': repr(x)})
+        function_call.get("args").update({'y': repr(y)})
+
+        utility.send_string(self.connection, json.dumps(function_call))
+
+        received_status = False
+        status = None
+        while not received_status:
+            message = utility.receive_string(self.connection)
+            message = json.loads(message)
+
+            if message.get("type") == "success":
+                received_status = True
+                status = True
+            elif message.get("type") == "failure":
+                received_status = True
+                status = False
+            if message.get("type") == "changes":
+                self.parent_game.update_game(message)
+
+        return status
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+
+    @property
+    def owner(self):
+        return self._owner
+
+    @property
+    def level(self):
+        return self._level
+
+    @property
+    def moves_left(self):
+        return self._moves_left
+
+    @property
+    def living(self):
+        return self._living
+
+
+
+
 ## @class Base
 #  @brief The information on the base
 class Base(Mappable):
@@ -193,81 +268,6 @@ class Tile(Mappable):
     @property
     def owner(self):
         return self._owner
-
-
-
-
-## @class Virus
-#  @brief Stores the information about a virus
-class Virus(Mappable):
-
-    def __init__(self, connection, parent_game, id, x, y, owner, level, moves_left, living):
-        self._connection = connection
-        self._parent_game = parent_game
-        self._id = id
-        self._x = x
-        self._y = y
-        self._owner = owner
-        self._level = level
-        self._moves_left = moves_left
-        self._living = living
-
-    ## @fn move
-    #  @param x The x coordinate to move to
-    #  @param y The y coordinate to move to
-    def move(self, x, y):
-        function_call = client_json.function_call.copy()
-        function_call.update({"type": 'move'})
-        function_call.get("args").update({"actor": self.id})
-        function_call.get("args").update({'x': repr(x)})
-        function_call.get("args").update({'y': repr(y)})
-
-        utility.send_string(self.connection, json.dumps(function_call))
-
-        received_status = False
-        status = None
-        while not received_status:
-            message = utility.receive_string(self.connection)
-            message = json.loads(message)
-
-            if message.get("type") == "success":
-                received_status = True
-                status = True
-            elif message.get("type") == "failure":
-                received_status = True
-                status = False
-            if message.get("type") == "changes":
-                self.parent_game.update_game(message)
-
-        return status
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def x(self):
-        return self._x
-
-    @property
-    def y(self):
-        return self._y
-
-    @property
-    def owner(self):
-        return self._owner
-
-    @property
-    def level(self):
-        return self._level
-
-    @property
-    def moves_left(self):
-        return self._moves_left
-
-    @property
-    def living(self):
-        return self._living
 
 
 
