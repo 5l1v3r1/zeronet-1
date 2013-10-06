@@ -1,8 +1,0 @@
-[{"args": {"timestamp": 1379798923, "id": "1", "server_version": 1, "game_version": 1}, "type": "metadata"},
-{"args": {"changes": [{"action": "add", "type": "Player", "values": {"time": 10, "cycles": null, "id": 0, "byte_dollars": null, "name": "Shell AI"}}, {"action": "add", "type": "Player", "values": {"time": 10, "cycles": null, "id": 1, "byte_dollars": null, "name": "Shell AI"}}, {"action": "global_update", "values": {"turn_number": 0, "game_number": null, "height": 20, "scale_cost": null, "width": 40, "player_id": 0, "base_cost": null}}]}, "type": "changes"},
-{"type": "start_game"},
-{"args": {"changes": [{"action": "update", "values": {"cycles": 0, "time": 11}, "id": 1}, {"action": "global_update", "values": {"turn_number": 1, "player_id": 1}}]}, "type": "changes"},
-{"type": "start_turn"},
-{"type": "end_turn"},
-{"args": {"changes": [{"action": "global_update", "values": {"player_id": 0}}]}, "type": "changes"},
-{"args": {"reason": "time", "winner": 1}, "type": "game_over"}]
