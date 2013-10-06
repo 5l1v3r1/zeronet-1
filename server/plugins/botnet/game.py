@@ -19,6 +19,10 @@ class Game(game_objects.Game):
         #Common example would be creating the config
 
         self.config = self.load_config('defaults')
+
+        self.starting_cycles = self.config['globals']['starting_cycles']
+        self.cycles_per_turn = self.config['globals']['cycles_per_turn']
+
         self.turn_number = 0
         self.game_number = 0
         self.base_cost = self.config['globals']['base_cost']
@@ -34,8 +38,8 @@ class Game(game_objects.Game):
 
     def worth(self, id):
         # Calculate the worth of a player
-        total = self.objects.players[id].cycles
-        for virus in self.objects.viruses:
+        total = self.players[id].cycles
+        for virus in self.viruses:
             if virus.owner == id:
                 total += self.virus_cost(virus.level)
         return total
@@ -81,7 +85,7 @@ class Game(game_objects.Game):
         closed = [[False]*self.height for _ in range(self.width)]
         offsets = [(0,1),(1,0),(0,-1),(-1,0)]
         score = 0
-        for base in self.objects.bases:
+        for base in self.bases:
             if base.owner == id:
                 score+=1
                 path.append(self.grid[base.x][base.y])
@@ -99,7 +103,7 @@ class Game(game_objects.Game):
     def bigger_area(self):
         p1, p2 = set(), set()
         # Builds a dictionary of all controlled tiles for both players
-        for tile in self.objects.tiles:
+        for tile in self.tiles:
             if tile.owner == 0:
                 p1.add((tile.x, tile.y))
             elif tile.owner == 1:
@@ -152,7 +156,8 @@ class Game(game_objects.Game):
         #Initialize any global values
         #At this point Player objects exist
         #(But any game-specific values will be uninitialized)
-        self.grid = [[[ self.add_object(objects.Tile,[x, y, 2]) ] for y in range(self.height)] for x in range(self.width)]
+        #TODO: Something is wrong here
+        self.grid = [[[ self.add_object( objects.Tile(self, x, y, 2) ) ] for y in range(self.height)] for x in range(self.width)]
 
 
     def before_turn(self):

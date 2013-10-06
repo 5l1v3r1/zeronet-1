@@ -30,13 +30,17 @@ class Player(Game.Object):
     _remotes = {}
 
     def __init__(self, game, **kwargs):
+        print('__INIT__ PLAYER')
         Game.Object.__init__(self, game, **kwargs)
         #TODO: Fill in any work that needs to be done when an object is made
         #Common example would be setting the unit's health to maximum
+
         self.name = ''
-        self.byte_dollars = self.game.config['default']['byte_dollars']
-        self.cycles = self.game.config['default']['cycles']
-        self.time = int(0)
+        self.byte_dollars = 0
+        self.cycles = self.game.config['globals']['starting_cycles']
+        self.time = 0
+
+        print('END __INIT__ PLAYER')
 
     def before_turn(self):
         #TODO: Fill in start of turn values
@@ -61,10 +65,14 @@ class Tile(Game.Object):
     _relations = {}
     _remotes = {}
 
-    def __init__(self, game, **kwargs):
+    def __init__(self, game, x, y, owner,  **kwargs):
         Game.Object.__init__(self, game, **kwargs)
         #TODO: Fill in any work that needs to be done when an object is made
         #Common example would be setting the unit's health to maximum
+
+        self.x = x
+        self.y = y
+        self.owner = owner
 
     def before_turn(self):
         #TODO: Fill in start of turn values
@@ -115,11 +123,11 @@ class Virus(Game.Object):
             return 'Turn {}: Your virus {} cannot move onto a wall. ({},{}) -> ({},{})'.format(self.game.turn_number, self.id, self.x, self.y, x, y)
 
         #TODO Handle walking into bases
-        for base in self.bases:
+        for base in self.game.bases:
             pass
 
         #TODO Handle walking into other viruses
-        for virus in self.viruses:
+        for virus in self.game.viruses:
             pass
 
         self.game.grid[self.x][self.y].remove(self)
