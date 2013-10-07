@@ -38,7 +38,7 @@ class Player(Game.Object):
         self.name = ''
         self.byte_dollars = 0
         self.cycles = self.game.config['globals']['starting_cycles']
-        self.time = 0
+        self.time = self.game.config['globals']['start_time']
 
         print('END __INIT__ PLAYER')
 
@@ -146,10 +146,15 @@ class Base(Game.Object):
     _relations = {}
     _remotes = {}
 
-    def __init__(self, game, **kwargs):
+    def __init__(self, game, x, y, owner, **kwargs):
         Game.Object.__init__(self, game, **kwargs)
         #TODO: Fill in any work that needs to be done when an object is made
         #Common example would be setting the unit's health to maximum
+
+        self.x = x
+        self.y = y
+        self.owner = owner
+        self.spawns_left = 0
 
     def before_turn(self):
         #TODO: Fill in start of turn values

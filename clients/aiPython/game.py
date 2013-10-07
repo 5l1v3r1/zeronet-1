@@ -113,8 +113,11 @@ class Game:
             if message['type'] == 'game_over':
                 return True
 
+            #TODO: REMOVE
+            print('PLAYERID {}'.format(self.ai.player_id))
             if self.ai.my_player_id == self.ai.player_id:
                 utility.v_print("Turn Number: {}".format(self.ai.turn_number))
+                print('')
                 self.ai.run()
                 utility.send_string(self.serv_conn, json.dumps(client_json.end_turn))
 
@@ -131,6 +134,8 @@ class Game:
 
     #Update game from message
     def update_game(self, message):
+        #TODO: REMOVE
+        print('UPDATE GAME: {}'.format(message))
         if message.get("type") != "changes":
             return False
 
@@ -168,35 +173,23 @@ class Game:
 
     #Parse the remove action.
     def change_remove(self, change):
-        remove_id = change.get("id")
-        try:
-            index = self.ai.players.find(remove_id, key=operator.attrgetter('id'))
-        except:
-            pass
-        else:
-            self.ai.players.remove(index)
-            return True
-        try:
-            index = self.ai.viruses.find(remove_id, key=operator.attrgetter('id'))
-        except:
-            pass
-        else:
-            self.ai.viruses.remove(index)
-            return True
-        try:
-            index = self.ai.bases.find(remove_id, key=operator.attrgetter('id'))
-        except:
-            pass
-        else:
-            self.ai.bases.remove(index)
-            return True
-        try:
-            index = self.ai.tiles.find(remove_id, key=operator.attrgetter('id'))
-        except:
-            pass
-        else:
-            self.ai.tiles.remove(index)
-            return True
+        remove_id = change.get('id')
+        #TODO: REMOVE
+        print('REMOVING ID {}'.format(remove_id))
+
+        for virus in self.ai.viruses:
+            if virus.id == remove_id:
+                self.ai.viruses.remove(virus)
+                print('REMOVE VIRUS')
+                return True
+
+        for tile in self.ai.tiles:
+            if tile.id == remove_id:
+                self.ai.tiles.remove(tile)
+                print('REMOVE TILE')
+                return True
+
+
         return False
 
     #Parse the update action.
@@ -208,6 +201,8 @@ class Game:
         except:
             pass
         else:
+            #TODO: REMOVE
+            print('UPDATING PLAYER WITH ID {}'.format(change_id))
             self.ai.players[index].__dict__.update(values)
             return True
         try:
@@ -215,6 +210,8 @@ class Game:
         except:
             pass
         else:
+            #TODO: REMOVE
+            print('UPDATING VIRUS WITH ID {}'.format(change_id))
             self.ai.viruses[index].__dict__.update(values)
             return True
         try:
@@ -222,6 +219,8 @@ class Game:
         except:
             pass
         else:
+            #TODO: REMOVE
+            print('UPDATING BASE WITH ID {}'.format(change_id))
             self.ai.bases[index].__dict__.update(values)
             return True
         try:
@@ -229,6 +228,8 @@ class Game:
         except:
             pass
         else:
+            #TODO: REMOVE
+            print('UPDATING TILE WITH ID {}'.format(change_id))
             self.ai.tiles[index].__dict__.update(values)
             return True
         return False
@@ -236,7 +237,14 @@ class Game:
     #Parse the global_update action
     def change_global_update(self, change):
         values = change.get("values")
+
+        #TODO: REMOVE
+        print('GLOBAL BEFORE: {}'.format(self.ai.__dict__))
+
         self.ai.__dict__.update(values)
+
+        #TODO: REMOVE
+        print('GLOBAL AFTER: {}'.format(self.ai.__dict__))
         return True
 
     def run(self):

@@ -44,6 +44,9 @@ class Mappable(GameObject):
 class Player(GameObject):
 
     def __init__(self, connection, parent_game, id, name, byte_dollars, cycles, time):
+        #TODO: REMOVE
+        print('INIT PLAYER')
+
         self._connection = connection
         self._parent_game = parent_game
         self._id = id
@@ -108,6 +111,9 @@ class Player(GameObject):
 class Virus(Mappable):
 
     def __init__(self, connection, parent_game, id, x, y, owner, level, moves_left, living):
+        #TODO: REMOVE
+        print('INIT VIRUS')
+
         self._connection = connection
         self._parent_game = parent_game
         self._id = id
@@ -122,6 +128,9 @@ class Virus(Mappable):
     #  @param x The x coordinate to move to
     #  @param y The y coordinate to move to
     def move(self, x, y):
+        #TODO: REMOVE
+        print('VIRUS MOVE ({},{}) -> ({},{})'.format(self.x, self.y, x, y))
+
         function_call = client_json.function_call.copy()
         function_call.update({"type": 'move'})
         function_call.get("args").update({"actor": self.id})
@@ -183,6 +192,9 @@ class Virus(Mappable):
 class Base(Mappable):
 
     def __init__(self, connection, parent_game, id, x, y, owner, spawns_left):
+        #TODO: REMOVE
+        print('BASE INIT')
+
         self._connection = connection
         self._parent_game = parent_game
         self._id = id
@@ -194,6 +206,9 @@ class Base(Mappable):
     ## @fn spawn
     #  @brief Creates a Virus on the base with certain level.
     def spawn(self, level):
+        #TODO: REMOVE
+        print('BASE SPAWN')
+
         function_call = client_json.function_call.copy()
         function_call.update({"type": 'spawn'})
         function_call.get("args").update({"actor": self.id})
@@ -245,6 +260,9 @@ class Base(Mappable):
 class Tile(Mappable):
 
     def __init__(self, connection, parent_game, id, x, y, owner):
+        #TODO: REMOVE
+        print('INIT TILE')
+
         self._connection = connection
         self._parent_game = parent_game
         self._id = id

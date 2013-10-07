@@ -29,7 +29,12 @@ class Game(game_objects.Game):
         self.scale_cost = self.config['globals']['scale_cost']
         self.width = self.config['globals']['width']
         self.height = self.config['globals']['height']
+        self.return_amount = self.config['globals']['return_amount']
+        self.time_inc = self.config['globals']['time_inc']
+
         self.player_id = 0
+
+        self.viruses = []
 
         print('END __INIT__')
 
@@ -65,19 +70,22 @@ class Game(game_objects.Game):
                 #if mapSquare is an X then it is a wall, owned by 3
                 if map_square == 'X':
                     #self.grid[x][y] = self.addObject(objects.Tile, [x,y,3])
-                    self.grid[x][y].owner = 3
+                    self.grid[x][y][0].owner = 3
                 #if mapSquare is a . then it is a neutral tile owned by 2
                 elif map_square == '.':
-                    self.grid[x][y] = self.add_object(objects.Tile, [x,y,2])
+                    #self.grid[x][y] = self.add_object(objects.Tile, [x,y,2])
+                    self.grid[x][y][0].owner = 2
                 #if mapSquare is 1, then it is a tile owned by player 1, which means
                 #there's a base on top, so we add a base too
                 elif map_square == '1':
-                    self.grid[x][y] = self.addObject(objects.Tile, [x,y,1])
-                    self.add_object(game_objects.Base,[x, y, 1, 0])
+                    #self.grid[x][y] = self.addObject(objects.Tile, [x,y,1])
+                    self.grid[x][y][0].owner = 1
+                    self.add_object(game_objects.Base(x, y, 1))
                 #same as previous, only it is player 0's base/tile combo
                 elif map_square =='0':
-                    self.grid[x][y] = self.addObject(objects.Tile, [x,y,0])
-                    self.add_object(game_objects.Base,[x, y, 0, 0])
+                    #self.grid[x][y] = self.add_object(objects.Tile(x, y, 0))
+                    self.grid[x][y][0].owner = 0
+                    self.add_object(game_objects.Base(self, x, y, 0))
 
     def getScore(self, id):
         path = []
@@ -168,7 +176,6 @@ class Game(game_objects.Game):
         #Setting current player's units to ready to move/attack
         #Start of turn income
         #Creating units whose construction began previously
-
         if self.turn_number % 2 == 0:
             score = self.bigger_area()
             self.players[0].byte_dollars += score[0]
@@ -186,14 +193,16 @@ class Game(game_objects.Game):
         #Setting all units to no moves_left/attacks_left
         #Any end of turn costs/damage
 
+        print('Player id: {}'.format(self.player_id))
+
         if self.player_id == 0:
             self.player_id = 1
         elif self.player_id == 1:
             self.player_id = 0
         else:
             print("player_id is not 0 or 1.")
-
-        pass
+        print('Player id: {}'.format(self.player_id))
+        return
 
     def check_winner(self):
         #TODO: Calculate if anyone has won and return the winner and reason
