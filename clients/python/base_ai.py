@@ -50,13 +50,13 @@ class BaseAI():
     # @brief List containing all Players.
     players = []
 
-    ##  @var viruses
-    # @brief List containing all Viruses.
-    viruses = []
-
     ##  @var tiles
     # @brief List containing all Tiles.
     tiles = []
+
+    ##  @var viruses
+    # @brief List containing all Viruses.
+    viruses = []
 
     ##  @var bases
     # @brief List containing all Bases.

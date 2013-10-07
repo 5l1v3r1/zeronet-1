@@ -3,8 +3,8 @@ from .game import Game
 from  util import command
 from game_utils import takes, success, failure
 
-class Mappable(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y']
+class Player(Game.Object):
+    _game_state_attributes = ['id', 'name', 'byte_dollars', 'cycles', 'time']
     _relations = {}
     _remotes = {}
 
@@ -23,9 +23,14 @@ class Mappable(Game.Object):
         #Common example would be zeroing unit moves after the turn
         pass
 
+    @command
+    @takes(message = unicode)
+    def talk(self, message = None):
+        pass
 
-class Player(Game.Object):
-    _game_state_attributes = ['id', 'name', 'byte_dollars', 'cycles', 'time']
+
+class Mappable(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y']
     _relations = {}
     _remotes = {}
 
@@ -54,14 +59,9 @@ class Player(Game.Object):
         #Common example would be zeroing unit moves after the turn
         pass
 
-    @command
-    @takes(message = unicode)
-    def talk(self, message = None):
-        pass
 
-
-class Base(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y', 'owner', 'spawns_left']
+class Tile(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y', 'owner']
     _relations = {}
     _remotes = {}
 
@@ -84,14 +84,9 @@ class Base(Game.Object):
         #Common example would be zeroing unit moves after the turn
         pass
 
-    @command
-    @takes(level = int)
-    def spawn(self, level = None):
-        pass
 
-
-class Tile(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y', 'owner']
+class Base(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y', 'owner', 'spawns_left']
     _relations = {}
     _remotes = {}
 
@@ -133,6 +128,7 @@ class Tile(Game.Object):
         newVirus = self.game.add_object(Game.Object.Virus,[self.x,self.y,self.owner,level,0])
 
         return True
+
 
 class Virus(Game.Object):
     _game_state_attributes = ['id', 'x', 'y', 'owner', 'level', 'moves_left', 'living']

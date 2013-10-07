@@ -113,11 +113,8 @@ class Game:
             if message['type'] == 'game_over':
                 return True
 
-            #TODO: REMOVE
-            print('PLAYERID {}'.format(self.ai.player_id))
             if self.ai.my_player_id == self.ai.player_id:
                 utility.v_print("Turn Number: {}".format(self.ai.turn_number))
-                print('')
                 self.ai.run()
                 utility.send_string(self.serv_conn, json.dumps(client_json.end_turn))
 
@@ -134,8 +131,6 @@ class Game:
 
     #Update game from message
     def update_game(self, message):
-        #TODO: REMOVE
-        print('UPDATE GAME: {}'.format(message))
         if message.get("type") != "changes":
             return False
 
@@ -160,91 +155,72 @@ class Game:
         if change.get("type") == "Player":
             temp = game_objects.Player(connection=self.serv_conn, parent_game=self, id=values.get("id"), name=values.get("name"), byte_dollars=values.get("byte_dollars"), cycles=values.get("cycles"), time=values.get("time"))
             self.ai.players.append(temp)
+        if change.get("type") == "Tile":
+            temp = game_objects.Tile(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"))
+            self.ai.tiles.append(temp)
         if change.get("type") == "Virus":
             temp = game_objects.Virus(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"), level=values.get("level"), moves_left=values.get("moves_left"), living=values.get("living"))
             self.ai.viruses.append(temp)
         if change.get("type") == "Base":
             temp = game_objects.Base(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"), spawns_left=values.get("spawns_left"))
             self.ai.bases.append(temp)
-        if change.get("type") == "Tile":
-            temp = game_objects.Tile(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"))
-            self.ai.tiles.append(temp)
         return True
 
     #Parse the remove action.
     def change_remove(self, change):
-        remove_id = change.get('id')
-        #TODO: REMOVE
-        print('REMOVING ID {}'.format(remove_id))
-
-        for virus in self.ai.viruses:
-            if virus.id == remove_id:
-                self.ai.viruses.remove(virus)
-                print('REMOVE VIRUS')
+        remove_id = change.get("id")
+        for player in self.ai.players:
+            if player.id == remove_id:
+                self.ai.players.remove(player)
+                print('REMOVED PLAYER WITH ID {}'.format(remove_id))
                 return True
-
         for tile in self.ai.tiles:
             if tile.id == remove_id:
                 self.ai.tiles.remove(tile)
-                print('REMOVE TILE')
+                print('REMOVED TILE WITH ID {}'.format(remove_id))
                 return True
-
-
+        for virus in self.ai.viruses:
+            if virus.id == remove_id:
+                self.ai.viruses.remove(virus)
+                print('REMOVED VIRUS WITH ID {}'.format(remove_id))
+                return True
+        for base in self.ai.bases:
+            if base.id == remove_id:
+                self.ai.bases.remove(base)
+                print('REMOVED BASE WITH ID {}'.format(remove_id))
+                return True
         return False
 
     #Parse the update action.
     def change_update(self, change):
         change_id = change.get("id")
         values = change.get("values")
-        try:
-            index = self.ai.players.find(change_id, key=operator.attrgetter('id'))
-        except:
-            pass
-        else:
-            #TODO: REMOVE
-            print('UPDATING PLAYER WITH ID {}'.format(change_id))
-            self.ai.players[index].__dict__.update(values)
-            return True
-        try:
-            index = self.ai.viruses.find(change_id, key=operator.attrgetter('id'))
-        except:
-            pass
-        else:
-            #TODO: REMOVE
-            print('UPDATING VIRUS WITH ID {}'.format(change_id))
-            self.ai.viruses[index].__dict__.update(values)
-            return True
-        try:
-            index = self.ai.bases.find(change_id, key=operator.attrgetter('id'))
-        except:
-            pass
-        else:
-            #TODO: REMOVE
-            print('UPDATING BASE WITH ID {}'.format(change_id))
-            self.ai.bases[index].__dict__.update(values)
-            return True
-        try:
-            index = self.ai.tiles.find(change_id, key=operator.attrgetter('id'))
-        except:
-            pass
-        else:
-            #TODO: REMOVE
-            print('UPDATING TILE WITH ID {}'.format(change_id))
-            self.ai.tiles[index].__dict__.update(values)
-            return True
+        for player in players:
+            if player.id == change_id:
+                player.__dict__.update(values)
+                print('UPDATED PLAYER WITH ID {}'.format(change_id))
+                return True
+        for tile in tiles:
+            if tile.id == change_id:
+                tile.__dict__.update(values)
+                print('UPDATED TILE WITH ID {}'.format(change_id))
+                return True
+        for virus in viruses:
+            if virus.id == change_id:
+                virus.__dict__.update(values)
+                print('UPDATED PLAYER WITH ID {}'.format(change_id))
+                return True
+        for base in bases:
+            if base.id == change_id:
+                base.__dict__.update(values)
+                print('UPDATED PLAYER WITH ID {}'.format(change_id))
+                return True
         return False
 
     #Parse the global_update action
     def change_global_update(self, change):
         values = change.get("values")
-
-        #TODO: REMOVE
-        print('GLOBAL BEFORE: {}'.format(self.ai.__dict__))
-
         self.ai.__dict__.update(values)
-
-        #TODO: REMOVE
-        print('GLOBAL AFTER: {}'.format(self.ai.__dict__))
         return True
 
     def run(self):

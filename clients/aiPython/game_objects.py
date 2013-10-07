@@ -12,41 +12,11 @@ class GameObject():
 
 
 
-## @class Mappable
-#  @brief The base object for all mappable things
-class Mappable(GameObject):
-
-    def __init__(self, connection, parent_game, id, x, y):
-        self._connection = connection
-        self._parent_game = parent_game
-        self._id = id
-        self._x = x
-        self._y = y
-
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def x(self):
-        return self._x
-
-    @property
-    def y(self):
-        return self._y
-
-
-
-
 ## @class Player
 #  @brief Stores information about a player in the game
 class Player(GameObject):
 
     def __init__(self, connection, parent_game, id, name, byte_dollars, cycles, time):
-        #TODO: REMOVE
-        print('INIT PLAYER')
-
         self._connection = connection
         self._parent_game = parent_game
         self._id = id
@@ -106,14 +76,69 @@ class Player(GameObject):
 
 
 
+## @class Mappable
+#  @brief The base object for all mappable things
+class Mappable(GameObject):
+
+    def __init__(self, connection, parent_game, id, x, y):
+        self._connection = connection
+        self._parent_game = parent_game
+        self._id = id
+        self._x = x
+        self._y = y
+
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+
+
+
+
+## @class Tile
+class Tile(Mappable):
+
+    def __init__(self, connection, parent_game, id, x, y, owner):
+        self._connection = connection
+        self._parent_game = parent_game
+        self._id = id
+        self._x = x
+        self._y = y
+        self._owner = owner
+
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+
+    @property
+    def owner(self):
+        return self._owner
+
+
+
+
 ## @class Virus
 #  @brief Stores the information about a virus
 class Virus(Mappable):
 
     def __init__(self, connection, parent_game, id, x, y, owner, level, moves_left, living):
-        #TODO: REMOVE
-        print('INIT VIRUS')
-
         self._connection = connection
         self._parent_game = parent_game
         self._id = id
@@ -128,9 +153,6 @@ class Virus(Mappable):
     #  @param x The x coordinate to move to
     #  @param y The y coordinate to move to
     def move(self, x, y):
-        #TODO: REMOVE
-        print('VIRUS MOVE ({},{}) -> ({},{})'.format(self.x, self.y, x, y))
-
         function_call = client_json.function_call.copy()
         function_call.update({"type": 'move'})
         function_call.get("args").update({"actor": self.id})
@@ -192,9 +214,6 @@ class Virus(Mappable):
 class Base(Mappable):
 
     def __init__(self, connection, parent_game, id, x, y, owner, spawns_left):
-        #TODO: REMOVE
-        print('BASE INIT')
-
         self._connection = connection
         self._parent_game = parent_game
         self._id = id
@@ -206,9 +225,6 @@ class Base(Mappable):
     ## @fn spawn
     #  @brief Creates a Virus on the base with certain level.
     def spawn(self, level):
-        #TODO: REMOVE
-        print('BASE SPAWN')
-
         function_call = client_json.function_call.copy()
         function_call.update({"type": 'spawn'})
         function_call.get("args").update({"actor": self.id})
@@ -252,40 +268,6 @@ class Base(Mappable):
     @property
     def spawns_left(self):
         return self._spawns_left
-
-
-
-
-## @class Tile
-class Tile(Mappable):
-
-    def __init__(self, connection, parent_game, id, x, y, owner):
-        #TODO: REMOVE
-        print('INIT TILE')
-
-        self._connection = connection
-        self._parent_game = parent_game
-        self._id = id
-        self._x = x
-        self._y = y
-        self._owner = owner
-
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def x(self):
-        return self._x
-
-    @property
-    def y(self):
-        return self._y
-
-    @property
-    def owner(self):
-        return self._owner
 
 
 
