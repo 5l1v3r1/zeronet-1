@@ -12,33 +12,6 @@ class GameObject():
 
 
 
-## @class Mappable
-#  @brief The base object for all mappable things
-class Mappable(GameObject):
-
-    def __init__(self, connection, parent_game, id, x, y):
-        self._connection = connection
-        self._parent_game = parent_game
-        self._id = id
-        self._x = x
-        self._y = y
-
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def x(self):
-        return self._x
-
-    @property
-    def y(self):
-        return self._y
-
-
-
-
 ## @class Player
 #  @brief Stores information about a player in the game
 class Player(GameObject):
@@ -103,79 +76,16 @@ class Player(GameObject):
 
 
 
-## @class Base
-#  @brief The information on the base
-class Base(Mappable):
+## @class Mappable
+#  @brief The base object for all mappable things
+class Mappable(GameObject):
 
-    def __init__(self, connection, parent_game, id, x, y, owner, spawns_left):
+    def __init__(self, connection, parent_game, id, x, y):
         self._connection = connection
         self._parent_game = parent_game
         self._id = id
         self._x = x
         self._y = y
-        self._owner = owner
-        self._spawns_left = spawns_left
-
-    ## @fn spawn
-    #  @brief Creates a Virus on the base with certain level.
-    def spawn(self, level):
-        function_call = client_json.function_call.copy()
-        function_call.update({"type": 'spawn'})
-        function_call.get("args").update({"actor": self.id})
-        function_call.get("args").update({'level': repr(level)})
-
-        utility.send_string(self.connection, json.dumps(function_call))
-
-        received_status = False
-        status = None
-        while not received_status:
-            message = utility.receive_string(self.connection)
-            message = json.loads(message)
-
-            if message.get("type") == "success":
-                received_status = True
-                status = True
-            elif message.get("type") == "failure":
-                received_status = True
-                status = False
-            if message.get("type") == "changes":
-                self.parent_game.update_game(message)
-
-        return status
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def x(self):
-        return self._x
-
-    @property
-    def y(self):
-        return self._y
-
-    @property
-    def owner(self):
-        return self._owner
-
-    @property
-    def spawns_left(self):
-        return self._spawns_left
-
-
-
-
-## @class Tile
-class Tile(Mappable):
-
-    def __init__(self, connection, parent_game, id, x, y, owner):
-        self._connection = connection
-        self._parent_game = parent_game
-        self._id = id
-        self._x = x
-        self._y = y
-        self._owner = owner
 
 
     @property
@@ -189,10 +99,6 @@ class Tile(Mappable):
     @property
     def y(self):
         return self._y
-
-    @property
-    def owner(self):
-        return self._owner
 
 
 
@@ -268,6 +174,100 @@ class Virus(Mappable):
     @property
     def living(self):
         return self._living
+
+
+
+
+## @class Tile
+class Tile(Mappable):
+
+    def __init__(self, connection, parent_game, id, x, y, owner):
+        self._connection = connection
+        self._parent_game = parent_game
+        self._id = id
+        self._x = x
+        self._y = y
+        self._owner = owner
+
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+
+    @property
+    def owner(self):
+        return self._owner
+
+
+
+
+## @class Base
+#  @brief The information on the base
+class Base(Mappable):
+
+    def __init__(self, connection, parent_game, id, x, y, owner, spawns_left):
+        self._connection = connection
+        self._parent_game = parent_game
+        self._id = id
+        self._x = x
+        self._y = y
+        self._owner = owner
+        self._spawns_left = spawns_left
+
+    ## @fn spawn
+    #  @brief Creates a Virus on the base with certain level.
+    def spawn(self, level):
+        function_call = client_json.function_call.copy()
+        function_call.update({"type": 'spawn'})
+        function_call.get("args").update({"actor": self.id})
+        function_call.get("args").update({'level': repr(level)})
+
+        utility.send_string(self.connection, json.dumps(function_call))
+
+        received_status = False
+        status = None
+        while not received_status:
+            message = utility.receive_string(self.connection)
+            message = json.loads(message)
+
+            if message.get("type") == "success":
+                received_status = True
+                status = True
+            elif message.get("type") == "failure":
+                received_status = True
+                status = False
+            if message.get("type") == "changes":
+                self.parent_game.update_game(message)
+
+        return status
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+
+    @property
+    def owner(self):
+        return self._owner
+
+    @property
+    def spawns_left(self):
+        return self._spawns_left
 
 
 
