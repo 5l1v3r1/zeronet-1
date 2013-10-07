@@ -60,8 +60,8 @@ class Player(Game.Object):
         pass
 
 
-class Tile(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y', 'owner']
+class Base(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y', 'owner', 'spawns_left']
     _relations = {}
     _remotes = {}
 
@@ -84,9 +84,14 @@ class Tile(Game.Object):
         #Common example would be zeroing unit moves after the turn
         pass
 
+    @command
+    @takes(level = int)
+    def spawn(self, level = None):
+        pass
 
-class Virus(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y', 'owner', 'level', 'moves_left', 'living']
+
+class Tile(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y', 'owner']
     _relations = {}
     _remotes = {}
 
@@ -106,6 +111,54 @@ class Virus(Game.Object):
         #TODO: Set post-turn values
         #Common example would be zeroing unit moves after the turn
         self.moves_left = 0
+        return
+
+    @command
+    @takes(level = int)
+    def spawn(self, level = None):
+        player = self.game.players[self.player_id]
+        cost = self.game.virus_cost(level)
+
+        if self.owner != self.game.player_id:
+            return 'Turn {}: You cannot spawn a virus on a base {} you do not own. ({},{})'.format(self.game.turn_number, self.id, self.x, self.y)
+        elif level < 0:
+            return 'Turn {}: You cannot spawn a virus with a level {}. ({},{})'.format(self.game.turn_number, level, self.x, self.y)
+        elif player.cycles < cost:
+            return 'Turn {}: You do not have enough cycles({}) to spawn this virus(level:{} cost:{}). ({},{})'.format(self.game.turn_number, player.cycles, level, cost, self.x, self.y)
+        elif self.spawns_left <= 0:
+            return 'Turn {}: You do not have any spawns left to spawn this virus(level:{}). ({},{}) '.format(self.game.turn_number, level, self.x, self.y)
+
+        player.cycles -= cost
+        self.spawns_left -= 1
+        newVirus = self.game.add_object(Game.Object.Virus,[self.x,self.y,self.owner,level,0])
+
+        return True
+
+class Virus(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y', 'owner', 'level', 'moves_left', 'living']
+    _relations = {}
+    _remotes = {}
+
+    def __init__(self, game, x, y, owner, **kwargs):
+        Game.Object.__init__(self, game, **kwargs)
+        #TODO: Fill in any work that needs to be done when an object is made
+        #Common example would be setting the unit's health to maximum
+
+        self.x = x
+        self.y = y
+        self.owner = owner
+        self.spawns_left = 0
+
+    def before_turn(self):
+        #TODO: Fill in start of turn values
+        #Common example would be giving units moves before their turn
+        self.spawns_left = 1
+        return
+
+    def after_turn(self):
+        #TODO: Set post-turn values
+        #Common example would be zeroing unit moves after the turn
+        self.spawns_left = 0
         return
 
     @command
@@ -138,59 +191,5 @@ class Virus(Game.Object):
 
 
         return True
-
-
-
-class Base(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y', 'owner', 'spawns_left']
-    _relations = {}
-    _remotes = {}
-
-    def __init__(self, game, x, y, owner, **kwargs):
-        Game.Object.__init__(self, game, **kwargs)
-        #TODO: Fill in any work that needs to be done when an object is made
-        #Common example would be setting the unit's health to maximum
-
-        self.x = x
-        self.y = y
-        self.owner = owner
-        self.spawns_left = 0
-
-    def before_turn(self):
-        #TODO: Fill in start of turn values
-        #Common example would be giving units moves before their turn
-        self.spawns_left = 1
-        return
-
-    def after_turn(self):
-        #TODO: Set post-turn values
-        #Common example would be zeroing unit moves after the turn
-        self.spawns_left = 0
-        return
-
-    @command
-    @takes(level = int)
-    def spawn(self, level = None):
-        player = self.game.players[self.player_id]
-        cost = self.game.virus_cost(level)
-
-        if self.owner != self.game.player_id:
-            return 'Turn {}: You cannot spawn a virus on a base {} you do not own. ({},{})'.format(self.game.turn_number, self.id, self.x, self.y)
-        elif level < 0:
-            return 'Turn {}: You cannot spawn a virus with a level {}. ({},{})'.format(self.game.turn_number, level, self.x, self.y)
-        elif player.cycles < cost:
-            return 'Turn {}: You do not have enough cycles({}) to spawn this virus(level:{} cost:{}). ({},{})'.format(self.game.turn_number, player.cycles, level, cost, self.x, self.y)
-        elif self.spawns_left <= 0:
-            return 'Turn {}: You do not have any spawns left to spawn this virus(level:{}). ({},{}) '.format(self.game.turn_number, level, self.x, self.y)
-
-        player.cycles -= cost
-        self.spawns_left -= 1
-        newVirus = self.game.add_object(Game.Object.Virus,[self.x,self.y,self.owner,level,0])
-
-        return True
-
-
-
-
 
 
