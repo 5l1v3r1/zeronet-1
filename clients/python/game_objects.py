@@ -12,6 +12,33 @@ class GameObject():
 
 
 
+## @class Mappable
+#  @brief The base object for all mappable things
+class Mappable(GameObject):
+
+    def __init__(self, connection, parent_game, id, x, y):
+        self._connection = connection
+        self._parent_game = parent_game
+        self._id = id
+        self._x = x
+        self._y = y
+
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+
+
+
+
 ## @class Player
 #  @brief Stores information about a player in the game
 class Player(GameObject):
@@ -72,64 +99,6 @@ class Player(GameObject):
     @property
     def time(self):
         return self._time
-
-
-
-
-## @class Mappable
-#  @brief The base object for all mappable things
-class Mappable(GameObject):
-
-    def __init__(self, connection, parent_game, id, x, y):
-        self._connection = connection
-        self._parent_game = parent_game
-        self._id = id
-        self._x = x
-        self._y = y
-
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def x(self):
-        return self._x
-
-    @property
-    def y(self):
-        return self._y
-
-
-
-
-## @class Tile
-class Tile(Mappable):
-
-    def __init__(self, connection, parent_game, id, x, y, owner):
-        self._connection = connection
-        self._parent_game = parent_game
-        self._id = id
-        self._x = x
-        self._y = y
-        self._owner = owner
-
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def x(self):
-        return self._x
-
-    @property
-    def y(self):
-        return self._y
-
-    @property
-    def owner(self):
-        return self._owner
 
 
 
@@ -205,6 +174,37 @@ class Virus(Mappable):
     @property
     def living(self):
         return self._living
+
+
+
+
+## @class Tile
+class Tile(Mappable):
+
+    def __init__(self, connection, parent_game, id, x, y, owner):
+        self._connection = connection
+        self._parent_game = parent_game
+        self._id = id
+        self._x = x
+        self._y = y
+        self._owner = owner
+
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+
+    @property
+    def owner(self):
+        return self._owner
 
 
 

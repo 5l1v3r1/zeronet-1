@@ -3,8 +3,8 @@ from .game import Game
 from  util import command
 from game_utils import takes, success, failure
 
-class Player(Game.Object):
-    _game_state_attributes = ['id', 'name', 'byte_dollars', 'cycles', 'time']
+class Mappable(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y']
     _relations = {}
     _remotes = {}
 
@@ -23,14 +23,9 @@ class Player(Game.Object):
         #Common example would be zeroing unit moves after the turn
         pass
 
-    @command
-    @takes(message = unicode)
-    def talk(self, message = None):
-        pass
 
-
-class Mappable(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y']
+class Player(Game.Object):
+    _game_state_attributes = ['id', 'name', 'byte_dollars', 'cycles', 'time']
     _relations = {}
     _remotes = {}
 
@@ -59,9 +54,14 @@ class Mappable(Game.Object):
         #Common example would be zeroing unit moves after the turn
         pass
 
+    @command
+    @takes(message = unicode)
+    def talk(self, message = None):
+        pass
 
-class Tile(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y', 'owner']
+
+class Virus(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y', 'owner', 'level', 'moves_left', 'living']
     _relations = {}
     _remotes = {}
 
@@ -83,6 +83,36 @@ class Tile(Game.Object):
         #TODO: Set post-turn values
         #Common example would be zeroing unit moves after the turn
         pass
+
+    @command
+    @takes(x = int, y = int)
+    def move(self, x = None, y = None):
+        if self.owner != self.game.player_id:
+            return 'Turn {}: You cannot control a virus that is not yours'.format(self.game.turn_number)
+        elif self.moves_left <= 0:
+            return 'Turn {}: Your virus {} has no moves left. ({},{}) -> ({},{})'.format(self.game.turn_number, self.id, self.x, self.y, x, y)
+        elif not (0 <= x < self.game.width) or not(0 <= y < self.game.height):
+            return 'Turn {}: Your virus {} cannot move off the map. ({},{}) -> ({},{})'.format(self.game.turn_number, self.id, self.x, self.y, x, y)
+        elif abs(self.x - x) + abs(self.y - y) != 1:
+            return 'Turn {}: Your virus {} can only move to adjacent tiles. ({},{}) -> ({},{})'.format(self.game.turn_number, self.id, self.x, self.y, x, y)
+        elif self.game.grid[x][y][0].owner == 3:
+            return 'Turn {}: Your virus {} cannot move onto a wall. ({},{}) -> ({},{})'.format(self.game.turn_number, self.id, self.x, self.y, x, y)
+
+        #TODO Handle walking into bases
+        for base in self.game.bases:
+            pass
+
+        #TODO Handle walking into other viruses
+        for virus in self.game.viruses:
+            pass
+
+        self.game.grid[self.x][self.y].remove(self)
+        self.x = x
+        self.y = y
+        self.moves_left -= 1
+        self.game.grid[x][y].append(self)
+
+        return True
 
 
 class Base(Game.Object):
@@ -130,8 +160,8 @@ class Base(Game.Object):
         return True
 
 
-class Virus(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y', 'owner', 'level', 'moves_left', 'living']
+class Tile(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y', 'owner']
     _relations = {}
     _remotes = {}
 
@@ -156,36 +186,5 @@ class Virus(Game.Object):
         #Common example would be zeroing unit moves after the turn
         self.spawns_left = 0
         return
-
-    @command
-    @takes(x = int, y = int)
-    def move(self, x = None, y = None):
-        if self.owner != self.game.player_id:
-            return 'Turn {}: You cannot control a virus that is not yours'.format(self.game.turn_number)
-        elif self.moves_left <= 0:
-            return 'Turn {}: Your virus {} has no moves left. ({},{}) -> ({},{})'.format(self.game.turn_number, self.id, self.x, self.y, x, y)
-        elif not (0 <= x < self.game.width) or not(0 <= y < self.game.height):
-            return 'Turn {}: Your virus {} cannot move off the map. ({},{}) -> ({},{})'.format(self.game.turn_number, self.id, self.x, self.y, x, y)
-        elif abs(self.x - x) + abs(self.y - y) != 1:
-            return 'Turn {}: Your virus {} can only move to adjacent tiles. ({},{}) -> ({},{})'.format(self.game.turn_number, self.id, self.x, self.y, x, y)
-        elif self.game.grid[x][y][0].owner == 3:
-            return 'Turn {}: Your virus {} cannot move onto a wall. ({},{}) -> ({},{})'.format(self.game.turn_number, self.id, self.x, self.y, x, y)
-
-        #TODO Handle walking into bases
-        for base in self.game.bases:
-            pass
-
-        #TODO Handle walking into other viruses
-        for virus in self.game.viruses:
-            pass
-
-        self.game.grid[self.x][self.y].remove(self)
-        self.x = x
-        self.y = y
-        self.moves_left -= 1
-        self.game.grid[x][y].append(self)
-
-
-        return True
 
 

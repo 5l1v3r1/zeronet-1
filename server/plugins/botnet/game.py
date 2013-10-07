@@ -36,7 +36,9 @@ class Game(game_objects.Game):
 
         self.viruses = []
 
-        print('END __INIT__')
+        self.grid = [[[ self.add_object( objects.Tile(self, x, y, 2) ) ] for y in range(self.height)] for x in range(self.width)]
+
+        print('END __INIT__ GAME')
 
     def get_tile(self, x, y):
         return self.tiles[x * self.mapHeight + y]
@@ -165,7 +167,8 @@ class Game(game_objects.Game):
         #At this point Player objects exist
         #(But any game-specific values will be uninitialized)
         #TODO: Something is wrong here
-        self.grid = [[[ self.add_object( objects.Tile(self, x, y, 2) ) ] for y in range(self.height)] for x in range(self.width)]
+        return
+
 
 
     def before_turn(self):
@@ -181,7 +184,7 @@ class Game(game_objects.Game):
             self.players[0].byte_dollars += score[0]
             self.players[1].byte_dollars += score[1]
 
-        pass
+        return
 
     def after_turn(self):
         #TODO: Clean up any values at the end of a turn
@@ -194,13 +197,14 @@ class Game(game_objects.Game):
         #Any end of turn costs/damage
 
         print('Player id: {}'.format(self.player_id))
-
+        '''
         if self.player_id == 0:
             self.player_id = 1
         elif self.player_id == 1:
             self.player_id = 0
         else:
             print("player_id is not 0 or 1.")
+        '''
         print('Player id: {}'.format(self.player_id))
         return
 

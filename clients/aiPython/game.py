@@ -45,12 +45,13 @@ class Game:
         if message['type'] == 'changes':
             self.update_game(message)
         elif message['type'] == 'player_id':
-            self.ai.my_player_id = message['args']['id']
+            self.ai.player_id = message['args']['id']
         elif message['type'] == 'game_over':
             raise GameOverException(message["args"]["winner"], message["args"]["reason"])
         return message
 
     def wait_for(self, *types):
+        print('WAITING FOR: {}'.format(types))
         while True:
             message = self.receive()
             if message['type'] in types:
@@ -61,7 +62,7 @@ class Game:
         login_json = client_json.login.copy()
         login_json['args']['username'] = self.ai.username
         login_json['args']['password'] = self.ai.password
-
+        print('SENDING LOGON INFO')
         utility.send_string(self.serv_conn, json.dumps(login_json))
 
         message = self.wait_for('success', 'failure')
@@ -87,27 +88,35 @@ class Game:
             return True
         else:
             #Game creation failed
+            print('GAME CREATION FAILED')
             return False
 
     #Receive Player ID from server
     def recv_player_id(self):
+        print('RECIEVING PLAYER ID')
         self.wait_for('player_id')
+        print('RECEIVED PLAYER ID')
         return True
 
     #Runs before main_loop has began.
     def init_main(self):
+        print('STARTING INIT')
         self.wait_for('start_game')
-
         self.ai.init()
+
+        print('ENDING INIT')
         return True
 
     #Runs after main_loop has finished.
     def end_main(self):
+        print('STARTING END')
         self.ai.end()
+        print('ENDING END')
         return True
 
     #Main connection loop until end of game.
     def main_loop(self):
+        print('START MAIN LOOP')
         while True:
             message = self.wait_for('start_turn', 'game_over')
             if message['type'] == 'game_over':
@@ -117,6 +126,7 @@ class Game:
                 utility.v_print("Turn Number: {}".format(self.ai.turn_number))
                 self.ai.run()
                 utility.send_string(self.serv_conn, json.dumps(client_json.end_turn))
+        print('END MAIN LOOP')
 
      
     def get_log(self):
@@ -155,15 +165,19 @@ class Game:
         if change.get("type") == "Player":
             temp = game_objects.Player(connection=self.serv_conn, parent_game=self, id=values.get("id"), name=values.get("name"), byte_dollars=values.get("byte_dollars"), cycles=values.get("cycles"), time=values.get("time"))
             self.ai.players.append(temp)
-        if change.get("type") == "Tile":
-            temp = game_objects.Tile(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"))
-            self.ai.tiles.append(temp)
+            print('ADDING PLAYER WITH ID {}'.format(temp.id))
         if change.get("type") == "Virus":
             temp = game_objects.Virus(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"), level=values.get("level"), moves_left=values.get("moves_left"), living=values.get("living"))
             self.ai.viruses.append(temp)
+            print('ADDING VIRUS WITH ID {}'.format(temp.id))
+        if change.get("type") == "Tile":
+            temp = game_objects.Tile(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"))
+            self.ai.tiles.append(temp)
+            print('ADDING TILE WITH ID {}'.format(temp.id))
         if change.get("type") == "Base":
             temp = game_objects.Base(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"), spawns_left=values.get("spawns_left"))
             self.ai.bases.append(temp)
+            print('ADDING BASE WITH ID {}'.format(temp.id))
         return True
 
     #Parse the remove action.
@@ -174,15 +188,15 @@ class Game:
                 self.ai.players.remove(player)
                 print('REMOVED PLAYER WITH ID {}'.format(remove_id))
                 return True
-        for tile in self.ai.tiles:
-            if tile.id == remove_id:
-                self.ai.tiles.remove(tile)
-                print('REMOVED TILE WITH ID {}'.format(remove_id))
-                return True
         for virus in self.ai.viruses:
             if virus.id == remove_id:
                 self.ai.viruses.remove(virus)
                 print('REMOVED VIRUS WITH ID {}'.format(remove_id))
+                return True
+        for tile in self.ai.tiles:
+            if tile.id == remove_id:
+                self.ai.tiles.remove(tile)
+                print('REMOVED TILE WITH ID {}'.format(remove_id))
                 return True
         for base in self.ai.bases:
             if base.id == remove_id:
@@ -195,32 +209,37 @@ class Game:
     def change_update(self, change):
         change_id = change.get("id")
         values = change.get("values")
-        for player in players:
+        for player in self.ai.players:
             if player.id == change_id:
                 player.__dict__.update(values)
                 print('UPDATED PLAYER WITH ID {}'.format(change_id))
                 return True
-        for tile in tiles:
-            if tile.id == change_id:
-                tile.__dict__.update(values)
-                print('UPDATED TILE WITH ID {}'.format(change_id))
-                return True
-        for virus in viruses:
+        for virus in self.ai.viruses:
             if virus.id == change_id:
                 virus.__dict__.update(values)
-                print('UPDATED PLAYER WITH ID {}'.format(change_id))
+                print('UPDATED VIRUS WITH ID {}'.format(change_id))
                 return True
-        for base in bases:
+        for tile in self.ai.tiles:
+            if tile.id == change_id:
+                tile.__dict__.update(values)
+                print('UPDATED TILES WITH ID {}'.format(change_id))
+                return True
+        for base in self.ai.bases:
             if base.id == change_id:
                 base.__dict__.update(values)
-                print('UPDATED PLAYER WITH ID {}'.format(change_id))
+                print('UPDATED BASES WITH ID {}'.format(change_id))
                 return True
         return False
 
     #Parse the global_update action
     def change_global_update(self, change):
         values = change.get("values")
+        print('--' * 50)
+        print('BEFORE GLOBAL UPDATE: {}'.format(self.ai.__dict__))
+        print('--' * 50)
         self.ai.__dict__.update(values)
+        print('AFTER GLOBAL UPDATE: {}'.format(self.ai.__dict__))
+        print('--' * 50)
         return True
 
     def run(self):
