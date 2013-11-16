@@ -297,20 +297,20 @@ bool Game::change_add(std::string change)
         Player temp(&conn,this, values["id"].asInt(), values["name"].asString(), values["byte_dollars"].asInt(), values["cycles"].asInt(), values["time"].asInt());
         ai.players.push_back(temp);
     }
-    else if(root["type"].asString() == "Tile")
+    else if(root["type"].asString() == "Virus")
     {
-        Tile temp(&conn,this, values["id"].asInt(), values["x"].asInt(), values["y"].asInt(), values["owner"].asInt());
-        ai.tiles.push_back(temp);
+        Virus temp(&conn,this, values["id"].asInt(), values["x"].asInt(), values["y"].asInt(), values["owner"].asInt(), values["level"].asInt(), values["moves_left"].asInt(), values["living"].asInt());
+        ai.viruses.push_back(temp);
     }
     else if(root["type"].asString() == "Base")
     {
         Base temp(&conn,this, values["id"].asInt(), values["x"].asInt(), values["y"].asInt(), values["owner"].asInt(), values["spawns_left"].asInt());
         ai.bases.push_back(temp);
     }
-    else if(root["type"].asString() == "Virus")
+    else if(root["type"].asString() == "Tile")
     {
-        Virus temp(&conn,this, values["id"].asInt(), values["x"].asInt(), values["y"].asInt(), values["owner"].asInt(), values["level"].asInt(), values["moves_left"].asInt(), values["living"].asInt());
-        ai.viruses.push_back(temp);
+        Tile temp(&conn,this, values["id"].asInt(), values["x"].asInt(), values["y"].asInt(), values["owner"].asInt());
+        ai.tiles.push_back(temp);
     }
     else
     {
@@ -338,11 +338,11 @@ bool Game::change_remove(std::string change)
         }
     }
 
-    for(int i = 0;i < ai.tiles.size();i++)
+    for(int i = 0;i < ai.viruses.size();i++)
     {
-        if(ai.tiles[i].id == change_id)
+        if(ai.viruses[i].id == change_id)
         {
-            ai.tiles.erase(ai.tiles.begin()+i);
+            ai.viruses.erase(ai.viruses.begin()+i);
             return true;
         }
     }
@@ -356,11 +356,11 @@ bool Game::change_remove(std::string change)
         }
     }
 
-    for(int i = 0;i < ai.viruses.size();i++)
+    for(int i = 0;i < ai.tiles.size();i++)
     {
-        if(ai.viruses[i].id == change_id)
+        if(ai.tiles[i].id == change_id)
         {
-            ai.viruses.erase(ai.viruses.begin()+i);
+            ai.tiles.erase(ai.tiles.begin()+i);
             return true;
         }
     }
@@ -405,25 +405,37 @@ bool Game::change_update(std::string change)
         }
     }
 
-    for(int i = 0;i < ai.tiles.size();i++)
+    for(int i = 0;i < ai.viruses.size();i++)
     {
-        if(ai.tiles[i].id == change_id)
+        if(ai.viruses[i].id == change_id)
         {
             if(root["changes"]["id"] != null_value)
             {
-                ai.tiles[i].id = root["changes"]["id"].asInt();
+                ai.viruses[i].id = root["changes"]["id"].asInt();
             }
             if(root["changes"]["x"] != null_value)
             {
-                ai.tiles[i].x = root["changes"]["x"].asInt();
+                ai.viruses[i].x = root["changes"]["x"].asInt();
             }
             if(root["changes"]["y"] != null_value)
             {
-                ai.tiles[i].y = root["changes"]["y"].asInt();
+                ai.viruses[i].y = root["changes"]["y"].asInt();
             }
             if(root["changes"]["owner"] != null_value)
             {
-                ai.tiles[i].owner = root["changes"]["owner"].asInt();
+                ai.viruses[i].owner = root["changes"]["owner"].asInt();
+            }
+            if(root["changes"]["level"] != null_value)
+            {
+                ai.viruses[i].level = root["changes"]["level"].asInt();
+            }
+            if(root["changes"]["moves_left"] != null_value)
+            {
+                ai.viruses[i].moves_left = root["changes"]["moves_left"].asInt();
+            }
+            if(root["changes"]["living"] != null_value)
+            {
+                ai.viruses[i].living = root["changes"]["living"].asInt();
             }
             return true;
         }
@@ -457,37 +469,25 @@ bool Game::change_update(std::string change)
         }
     }
 
-    for(int i = 0;i < ai.viruses.size();i++)
+    for(int i = 0;i < ai.tiles.size();i++)
     {
-        if(ai.viruses[i].id == change_id)
+        if(ai.tiles[i].id == change_id)
         {
             if(root["changes"]["id"] != null_value)
             {
-                ai.viruses[i].id = root["changes"]["id"].asInt();
+                ai.tiles[i].id = root["changes"]["id"].asInt();
             }
             if(root["changes"]["x"] != null_value)
             {
-                ai.viruses[i].x = root["changes"]["x"].asInt();
+                ai.tiles[i].x = root["changes"]["x"].asInt();
             }
             if(root["changes"]["y"] != null_value)
             {
-                ai.viruses[i].y = root["changes"]["y"].asInt();
+                ai.tiles[i].y = root["changes"]["y"].asInt();
             }
             if(root["changes"]["owner"] != null_value)
             {
-                ai.viruses[i].owner = root["changes"]["owner"].asInt();
-            }
-            if(root["changes"]["level"] != null_value)
-            {
-                ai.viruses[i].level = root["changes"]["level"].asInt();
-            }
-            if(root["changes"]["moves_left"] != null_value)
-            {
-                ai.viruses[i].moves_left = root["changes"]["moves_left"].asInt();
-            }
-            if(root["changes"]["living"] != null_value)
-            {
-                ai.viruses[i].living = root["changes"]["living"].asInt();
+                ai.tiles[i].owner = root["changes"]["owner"].asInt();
             }
             return true;
         }

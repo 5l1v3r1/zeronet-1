@@ -63,17 +63,25 @@ class Mappable : public GameObject
 
 };
 
-/// @class Tile
-class Tile : public Mappable
+/// @class Virus
+///  @brief Stores the information about a virus
+class Virus : public Mappable
 {
     public:
-    Tile(GameSocket* connection, Game* parent_game, int id, int x, int y, int owner);
-    Tile(){}
+    Virus(GameSocket* connection, Game* parent_game, int id, int x, int y, int owner, int level, int moves_left, int living);
+    Virus(){}
+    /// @fn move
+    ///  @param x The x coordinate to move to
+    ///  @param y The y coordinate to move to
+    bool move(int x, int y);
 
     int get_id();
     int get_x();
     int get_y();
     int get_owner();
+    int get_level();
+    int get_moves_left();
+    int get_living();
 
     //protected:
     GameSocket* connection;
@@ -82,6 +90,9 @@ class Tile : public Mappable
     int x;
     int y;
     int owner;
+    int level;
+    int moves_left;
+    int living;
 
 };
 
@@ -113,25 +124,17 @@ class Base : public Mappable
 
 };
 
-/// @class Virus
-///  @brief Stores the information about a virus
-class Virus : public Mappable
+/// @class Tile
+class Tile : public Mappable
 {
     public:
-    Virus(GameSocket* connection, Game* parent_game, int id, int x, int y, int owner, int level, int moves_left, int living);
-    Virus(){}
-    /// @fn move
-    ///  @param x The x coordinate to move to
-    ///  @param y The y coordinate to move to
-    bool move(int x, int y);
+    Tile(GameSocket* connection, Game* parent_game, int id, int x, int y, int owner);
+    Tile(){}
 
     int get_id();
     int get_x();
     int get_y();
     int get_owner();
-    int get_level();
-    int get_moves_left();
-    int get_living();
 
     //protected:
     GameSocket* connection;
@@ -140,9 +143,6 @@ class Virus : public Mappable
     int x;
     int y;
     int owner;
-    int level;
-    int moves_left;
-    int living;
 
 };
 
