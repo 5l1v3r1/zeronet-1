@@ -23,3 +23,14 @@ templates:
         type: git
         location: https://github.com/siggame/cpp-client.git
         destination: clients/cpp
+
+    csharp-client:
+        type: git
+        location: https://github.com/siggame/csharp-client.git
+        destination: clients/csharp
+
+    java-client:
+        type: git
+        location: https://github.com/siggame/java-client.git
+        destination: clients/java
+

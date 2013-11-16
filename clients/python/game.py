@@ -155,15 +155,15 @@ class Game:
         if change.get("type") == "Player":
             temp = game_objects.Player(connection=self.serv_conn, parent_game=self, id=values.get("id"), name=values.get("name"), byte_dollars=values.get("byte_dollars"), cycles=values.get("cycles"), time=values.get("time"))
             self.ai.players.append(temp)
-        if change.get("type") == "Tile":
-            temp = game_objects.Tile(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"))
-            self.ai.tiles.append(temp)
         if change.get("type") == "Virus":
             temp = game_objects.Virus(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"), level=values.get("level"), moves_left=values.get("moves_left"), living=values.get("living"))
             self.ai.viruses.append(temp)
         if change.get("type") == "Base":
             temp = game_objects.Base(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"), spawns_left=values.get("spawns_left"))
             self.ai.bases.append(temp)
+        if change.get("type") == "Tile":
+            temp = game_objects.Tile(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"))
+            self.ai.tiles.append(temp)
         return True
 
     #Parse the remove action.
@@ -173,10 +173,6 @@ class Game:
             if player.id == remove_id:
                 self.ai.players.remove(player)
                 return True
-        for tile in self.ai.tiles:
-            if tile.id == remove_id:
-                self.ai.tiles.remove(tile)
-                return True
         for virus in self.ai.viruses:
             if virus.id == remove_id:
                 self.ai.viruses.remove(virus)
@@ -184,6 +180,10 @@ class Game:
         for base in self.ai.bases:
             if base.id == remove_id:
                 self.ai.bases.remove(base)
+                return True
+        for tile in self.ai.tiles:
+            if tile.id == remove_id:
+                self.ai.tiles.remove(tile)
                 return True
         return False
 
@@ -195,10 +195,6 @@ class Game:
             if player.id == change_id:
                 player.__dict__.update(values)
                 return True
-        for tile in self.ai.tiles:
-            if tile.id == change_id:
-                tile.__dict__.update(values)
-                return True
         for virus in self.ai.viruses:
             if virus.id == change_id:
                 virus.__dict__.update(values)
@@ -206,6 +202,10 @@ class Game:
         for base in self.ai.bases:
             if base.id == change_id:
                 base.__dict__.update(values)
+                return True
+        for tile in self.ai.tiles:
+            if tile.id == change_id:
+                tile.__dict__.update(values)
                 return True
         return False
 
