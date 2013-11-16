@@ -18,3 +18,8 @@ templates:
         type: git
         location: https://github.com/siggame/python-client.git
         destination: clients/python
+
+    cpp-client:
+        type: git
+        location: https://github.com/siggame/cpp-client.git
+        destination: clients/cpp
