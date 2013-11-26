@@ -63,6 +63,34 @@ class Mappable : public GameObject
 
 };
 
+/// @class Base
+///  @brief The information on the base
+class Base : public Mappable
+{
+    public:
+    Base(GameSocket* connection, Game* parent_game, int id, int x, int y, int owner, int spawns_left);
+    Base(){}
+    /// @fn spawn
+    ///  @brief Creates a Virus on the base with certain level.
+    bool spawn(int level);
+
+    int get_id();
+    int get_x();
+    int get_y();
+    int get_owner();
+    int get_spawns_left();
+
+    //protected:
+    GameSocket* connection;
+    Game* parent_game;
+    int id;
+    int x;
+    int y;
+    int owner;
+    int spawns_left;
+
+};
+
 /// @class Virus
 ///  @brief Stores the information about a virus
 class Virus : public Mappable
@@ -93,34 +121,6 @@ class Virus : public Mappable
     int level;
     int moves_left;
     int living;
-
-};
-
-/// @class Base
-///  @brief The information on the base
-class Base : public Mappable
-{
-    public:
-    Base(GameSocket* connection, Game* parent_game, int id, int x, int y, int owner, int spawns_left);
-    Base(){}
-    /// @fn spawn
-    ///  @brief Creates a Virus on the base with certain level.
-    bool spawn(int level);
-
-    int get_id();
-    int get_x();
-    int get_y();
-    int get_owner();
-    int get_spawns_left();
-
-    //protected:
-    GameSocket* connection;
-    Game* parent_game;
-    int id;
-    int x;
-    int y;
-    int owner;
-    int spawns_left;
 
 };
 

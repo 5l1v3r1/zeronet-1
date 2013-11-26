@@ -12,6 +12,33 @@ class GameObject():
 
 
 
+## @class Mappable
+#  @brief The base object for all mappable things
+class Mappable(GameObject):
+
+    def __init__(self, connection, parent_game, id, x, y):
+        self._connection = connection
+        self._parent_game = parent_game
+        self._id = id
+        self._x = x
+        self._y = y
+
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+
+
+
+
 ## @class Player
 #  @brief Stores information about a player in the game
 class Player(GameObject):
@@ -34,12 +61,12 @@ class Player(GameObject):
         function_call.get("args").update({"actor": self.id})
         function_call.get("args").update({'message': repr(message)})
 
-        utility.send_string(self.connection, json.dumps(function_call))
+        utility.send_string(self._connection, json.dumps(function_call))
 
         received_status = False
         status = None
         while not received_status:
-            message = utility.receive_string(self.connection)
+            message = utility.receive_string(self._connection)
             message = json.loads(message)
 
             if message.get("type") == "success":
@@ -72,33 +99,6 @@ class Player(GameObject):
     @property
     def time(self):
         return self._time
-
-
-
-
-## @class Mappable
-#  @brief The base object for all mappable things
-class Mappable(GameObject):
-
-    def __init__(self, connection, parent_game, id, x, y):
-        self._connection = connection
-        self._parent_game = parent_game
-        self._id = id
-        self._x = x
-        self._y = y
-
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def x(self):
-        return self._x
-
-    @property
-    def y(self):
-        return self._y
 
 
 
@@ -155,12 +155,12 @@ class Base(Mappable):
         function_call.get("args").update({"actor": self.id})
         function_call.get("args").update({'level': repr(level)})
 
-        utility.send_string(self.connection, json.dumps(function_call))
+        utility.send_string(self._connection, json.dumps(function_call))
 
         received_status = False
         status = None
         while not received_status:
-            message = utility.receive_string(self.connection)
+            message = utility.receive_string(self._connection)
             message = json.loads(message)
 
             if message.get("type") == "success":
@@ -222,12 +222,12 @@ class Virus(Mappable):
         function_call.get("args").update({'x': repr(x)})
         function_call.get("args").update({'y': repr(y)})
 
-        utility.send_string(self.connection, json.dumps(function_call))
+        utility.send_string(self._connection, json.dumps(function_call))
 
         received_status = False
         status = None
         while not received_status:
-            message = utility.receive_string(self.connection)
+            message = utility.receive_string(self._connection)
             message = json.loads(message)
 
             if message.get("type") == "success":

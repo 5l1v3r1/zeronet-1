@@ -296,15 +296,15 @@ bool Game::change_add(std::string change)
         Player temp(&conn,this, values["id"].asInt(), values["name"].asString(), values["byte_dollars"].asInt(), values["cycles"].asInt(), values["time"].asInt());
         ai.players.push_back(temp);
     }
-    else if(root["type"].asString() == "Virus")
-    {
-        Virus temp(&conn,this, values["id"].asInt(), values["x"].asInt(), values["y"].asInt(), values["owner"].asInt(), values["level"].asInt(), values["moves_left"].asInt(), values["living"].asInt());
-        ai.viruses.push_back(temp);
-    }
     else if(root["type"].asString() == "Base")
     {
         Base temp(&conn,this, values["id"].asInt(), values["x"].asInt(), values["y"].asInt(), values["owner"].asInt(), values["spawns_left"].asInt());
         ai.bases.push_back(temp);
+    }
+    else if(root["type"].asString() == "Virus")
+    {
+        Virus temp(&conn,this, values["id"].asInt(), values["x"].asInt(), values["y"].asInt(), values["owner"].asInt(), values["level"].asInt(), values["moves_left"].asInt(), values["living"].asInt());
+        ai.viruses.push_back(temp);
     }
     else if(root["type"].asString() == "Tile")
     {
@@ -337,20 +337,20 @@ bool Game::change_remove(std::string change)
         }
     }
 
-    for(int i = 0;i < ai.viruses.size();i++)
-    {
-        if(ai.viruses[i].id == change_id)
-        {
-            ai.viruses.erase(ai.viruses.begin()+i);
-            return true;
-        }
-    }
-
     for(int i = 0;i < ai.bases.size();i++)
     {
         if(ai.bases[i].id == change_id)
         {
             ai.bases.erase(ai.bases.begin()+i);
+            return true;
+        }
+    }
+
+    for(int i = 0;i < ai.viruses.size();i++)
+    {
+        if(ai.viruses[i].id == change_id)
+        {
+            ai.viruses.erase(ai.viruses.begin()+i);
             return true;
         }
     }
@@ -404,6 +404,34 @@ bool Game::change_update(std::string change)
         }
     }
 
+    for(int i = 0;i < ai.bases.size();i++)
+    {
+        if(ai.bases[i].id == change_id)
+        {
+            if(root["changes"]["id"] != null_value)
+            {
+                ai.bases[i].id = root["changes"]["id"].asInt();
+            }
+            if(root["changes"]["x"] != null_value)
+            {
+                ai.bases[i].x = root["changes"]["x"].asInt();
+            }
+            if(root["changes"]["y"] != null_value)
+            {
+                ai.bases[i].y = root["changes"]["y"].asInt();
+            }
+            if(root["changes"]["owner"] != null_value)
+            {
+                ai.bases[i].owner = root["changes"]["owner"].asInt();
+            }
+            if(root["changes"]["spawns_left"] != null_value)
+            {
+                ai.bases[i].spawns_left = root["changes"]["spawns_left"].asInt();
+            }
+            return true;
+        }
+    }
+
     for(int i = 0;i < ai.viruses.size();i++)
     {
         if(ai.viruses[i].id == change_id)
@@ -435,34 +463,6 @@ bool Game::change_update(std::string change)
             if(root["changes"]["living"] != null_value)
             {
                 ai.viruses[i].living = root["changes"]["living"].asInt();
-            }
-            return true;
-        }
-    }
-
-    for(int i = 0;i < ai.bases.size();i++)
-    {
-        if(ai.bases[i].id == change_id)
-        {
-            if(root["changes"]["id"] != null_value)
-            {
-                ai.bases[i].id = root["changes"]["id"].asInt();
-            }
-            if(root["changes"]["x"] != null_value)
-            {
-                ai.bases[i].x = root["changes"]["x"].asInt();
-            }
-            if(root["changes"]["y"] != null_value)
-            {
-                ai.bases[i].y = root["changes"]["y"].asInt();
-            }
-            if(root["changes"]["owner"] != null_value)
-            {
-                ai.bases[i].owner = root["changes"]["owner"].asInt();
-            }
-            if(root["changes"]["spawns_left"] != null_value)
-            {
-                ai.bases[i].spawns_left = root["changes"]["spawns_left"].asInt();
             }
             return true;
         }

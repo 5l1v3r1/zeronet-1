@@ -44,12 +44,12 @@ class BaseAI
     /// @var players
     ///  @brief List containing all Players.
     std::vector<Player> players;
-    /// @var viruses
-    ///  @brief List containing all Viruses.
-    std::vector<Virus> viruses;
     /// @var bases
     ///  @brief List containing all Bases.
     std::vector<Base> bases;
+    /// @var viruses
+    ///  @brief List containing all Viruses.
+    std::vector<Virus> viruses;
     /// @var tiles
     ///  @brief List containing all Tiles.
     std::vector<Tile> tiles;
