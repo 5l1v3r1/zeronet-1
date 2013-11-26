@@ -1,6 +1,7 @@
 import game_objects
 import objects
-
+import random
+import math
 class Game(game_objects.Game):
     _name = 'botnet'
     _game_version = 1
@@ -27,9 +28,17 @@ class Game(game_objects.Game):
         self.width = self.config['globals']['width']
         self.height = self.config['globals']['height']
 
+        self.max_bases = self.config['globals']['max_bases']
+        self.max_walls = self.config['globals']['max_walls']
+
         self.grid = None
 
+    @staticmethod
+    def man_dist(x1, y1, x2, y2):
+        return abs(x1-x2) + abs(y1-y2)
 
+    def virus_cost(self, level):
+        return int(self.base_cost*self.scale_cost**level)
 
     def before_start(self):
         #TODO: Initialize the game
@@ -39,9 +48,48 @@ class Game(game_objects.Game):
         #At this point Player objects exist
         #(But any game-specific values will be uninitialized)
 
-        self.grid = [[[ self.add_object( objects.Tile(self, x, y, 2) ) ] for y in range(self.height)] for x in range(self.width)]
+        self.grid = [[ objects.Tile(self, x=x, y=y, owner=2) for y in range(self.height)] for x in range(self.width)]
+
+        self.create_bases()
+        self.create_walls()
 
         pass
+
+    def create_bases(self):
+        for _ in range(self.max_bases):
+            randx = random.randrange(math.floor(self.width/2))
+            randy = random.randrange(self.height)
+            otherx = self.width - randx - 1
+
+            isvalid = True
+            print(self.objects)
+            for base in self.bases:
+                if base.x == randx and base.y == randy:
+                    isvalid = False
+
+            if isvalid:
+                base1 = objects.Base(self, x=randx, y=randy, owner=0, spawns_left=1)
+                base1 = objects.Base(self, x=otherx, y=randy, owner=1, spawns_left=1)
+
+        return True
+
+    def create_walls(self):
+        for _ in range(self.max_walls):
+            randx = random.randrange(math.floor(self.width/2))
+            randy = random.randrange(self.height)
+            otherx = self.width - randx - 1
+
+            isvalid = True
+            for base in self.bases:
+                if base.x == randx and base.y == randy:
+                    isvalid = False
+
+            if isvalid:
+                self.grid[randx][randy].owner = 3
+                self.grid[otherx][randy].owner = 3
+
+
+
 
     def before_turn(self):
         #TODO: Initialize the turn
