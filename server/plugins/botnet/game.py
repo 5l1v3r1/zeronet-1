@@ -9,6 +9,28 @@ class Game(game_objects.Game):
     _relations = {}
     _remotes = {}
 
+    def __init__(self, game, **kwargs):
+        game_objects.Game.__init__(self, game, **kwargs)
+        self.config = self.load_config('defaults')
+
+        #Some important stuff
+        self.turn_number = -1
+        self.player_id = 0
+        self.game_number = -1
+
+        #how long is this game
+        self.game_length = self.config['globals']['game_length']
+
+        #set some defaults
+        self.base_cost = self.config['globals']['base_cost']
+        self.scale_cost = self.config['globals']['scale_cost']
+        self.width = self.config['globals']['width']
+        self.height = self.config['globals']['height']
+
+        self.grid = None
+
+
+
     def before_start(self):
         #TODO: Initialize the game
 
@@ -16,8 +38,10 @@ class Game(game_objects.Game):
         #Initialize any global values
         #At this point Player objects exist
         #(But any game-specific values will be uninitialized)
-        config = self.load_config('defaults')
-        self.game_length = config['globals']['game_length']
+
+        self.grid = [[[ self.add_object( objects.Tile(self, x, y, 2) ) ] for y in range(self.height)] for x in range(self.width)]
+
+        pass
 
     def before_turn(self):
         #TODO: Initialize the turn

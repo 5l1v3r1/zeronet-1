@@ -48,6 +48,8 @@ class Game:
             self.ai.my_player_id = message['args']['id']
         elif message['type'] == 'game_over':
             raise GameOverException(message["args"]["winner"], message["args"]["reason"])
+        elif message['type'] == 'failure':
+            utility.v_print('Failure: {}'.format(message['message']))
         return message
 
     def wait_for(self, *types):
@@ -117,6 +119,8 @@ class Game:
                 utility.v_print("Turn Number: {}".format(self.ai.turn_number))
                 self.ai.run()
                 utility.send_string(self.serv_conn, json.dumps(client_json.end_turn))
+            else:
+                #Not the player's turn
 
      
     def get_log(self):

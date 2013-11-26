@@ -55,10 +55,14 @@ class Tile(Game.Object):
     _relations = {}
     _remotes = {}
 
-    def __init__(self, game, **kwargs):
+    def __init__(self, game, x, y, owner, **kwargs):
         Game.Object.__init__(self, game, **kwargs)
         #TODO: Fill in any work that needs to be done when an object is made
         #Common example would be setting the unit's health to maximum
+
+        self.x = x
+        self.y = y
+        self.owner = owner
 
     def before_turn(self):
         #TODO: Fill in start of turn values
