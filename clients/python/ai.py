@@ -6,7 +6,6 @@ from base_ai import BaseAI
 
 class AI(BaseAI):
     username = "Shell AI"
-    password = "password"
 
     ## @fn init
     #  @breif Initialization function that is ran before the game begins.

@@ -65,7 +65,7 @@ std::string Game::wait_for(std::vector<std::string>& types)
 }
 
 const std::string login_string =
-"{\"type\": \"login\", \"args\": {\"username\": \"\", \"password\": \"\", \"connection_type\": \"botnet\"}}";
+"{\"type\": \"login\", \"args\": {\"username\": \"\", \"connection_type\": \"botnet\"}}";
 
 bool Game::login()
 {
@@ -74,7 +74,6 @@ bool Game::login()
     reader_login.parse(login_string,event,false);
 
     event["args"]["username"] = ai.username();
-    event["args"]["password"] = ai.password();
 
     std::stringstream converter;
     std::string login_message;

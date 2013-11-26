@@ -50,8 +50,8 @@ class Player(Game.Object):
         pass
 
 
-class Tile(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y', 'owner']
+class Virus(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y', 'owner', 'level', 'moves_left', 'living']
     _relations = {}
     _remotes = {}
 
@@ -68,6 +68,11 @@ class Tile(Game.Object):
     def after_turn(self):
         #TODO: Set post-turn values
         #Common example would be zeroing unit moves after the turn
+        pass
+
+    @command
+    @takes(x = int, y = int)
+    def move(self, x = None, y = None):
         pass
 
 
@@ -97,8 +102,8 @@ class Base(Game.Object):
         pass
 
 
-class Virus(Game.Object):
-    _game_state_attributes = ['id', 'x', 'y', 'owner', 'level', 'moves_left', 'living']
+class Tile(Game.Object):
+    _game_state_attributes = ['id', 'x', 'y', 'owner']
     _relations = {}
     _remotes = {}
 
@@ -115,11 +120,6 @@ class Virus(Game.Object):
     def after_turn(self):
         #TODO: Set post-turn values
         #Common example would be zeroing unit moves after the turn
-        pass
-
-    @command
-    @takes(x = int, y = int)
-    def move(self, x = None, y = None):
         pass
 
 
