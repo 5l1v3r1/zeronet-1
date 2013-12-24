@@ -1,0 +1,49 @@
+Traceback (most recent call last):
+  File "./hatch", line 79, in <module>
+    update()
+  File "./hatch", line 61, in update
+    maker.make_all()
+  File "/home/russleyshaw/code/megaminer/newframework/zeronet/maker.py", line 42, in make_all
+    make_template(key, value['destination'])
+  File "/home/russleyshaw/code/megaminer/newframework/zeronet/maker.py", line 26, in make_template
+    run_codegen(source, destination)
+  File "/home/russleyshaw/code/megaminer/newframework/zeronet/maker.py", line 30, in run_codegen
+    output=destination)
+  File "/home/russleyshaw/code/megaminer/newframework/zeronet/sh.py", line 726, in __call__
+    return RunningCommand(cmd, call_args, stdin, stdout, stderr)
+  File "/home/russleyshaw/code/megaminer/newframework/zeronet/sh.py", line 291, in __init__
+    self.wait()
+  File "/home/russleyshaw/code/megaminer/newframework/zeronet/sh.py", line 295, in wait
+    self._handle_exit_code(self.process.wait())
+  File "/home/russleyshaw/code/megaminer/newframework/zeronet/sh.py", line 309, in _handle_exit_code
+    self.process.stderr
+sh.ErrorReturnCode_1: 
+
+  RAN: '/usr/bin/python3 .components/codegen/gen.py --output=clients/cpp --template=.components/cpp-client/templates'
+
+  STDOUT:
+['name', 'byte_dollars', 'cycles', 'time']
+['byte_dollars', 'cycles', 'name', 'time']
+['x', 'y']
+['x', 'y']
+['owner', 'spawns_left']
+['owner', 'spawns_left']
+['owner']
+['owner']
+['owner', 'level', 'moves_left', 'living']
+['level', 'living', 'moves_left', 'owner']
+
+
+  STDERR:
+Traceback (most recent call last):
+  File ".components/codegen/gen.py", line 39, in <module>
+    write(templates, output, objects)
+  File "/home/russleyshaw/code/megaminer/newframework/zeronet/.components/codegen/writer.py", line 17, in write
+    write_directory(source, dest, data)
+  File "/home/russleyshaw/code/megaminer/newframework/zeronet/.components/codegen/writer.py", line 39, in write_directory
+    write_file(source, dest, data, path)
+  File "/home/russleyshaw/code/megaminer/newframework/zeronet/.components/codegen/writer.py", line 54, in write_file
+    result = template.render(**data)
+  File "/usr/lib/python3/dist-packages/mako/template.py", line 443, in render
+    return runtime._render(self, self.callable_, args, data)
+  File "/us... (587 more, please see e.stderr)

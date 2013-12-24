@@ -3,10 +3,15 @@ import client_json
 from ai import AI
 import json
 import sys
-import game_objects
 import operator
 import utility
 import socket
+
+from Mappable import Mappable
+from Base import Base
+from Player import Player
+from Tile import Tile
+from Virus import Virus
 
 
 class GameOverException(Exception):
@@ -151,23 +156,27 @@ class Game:
     #Parse the add action
     def change_add(self, change):
         values = change.get("values")
+        if change.get("type") == "Base":
+            temp = Base(connection=self.serv_conn, parent_game=self, id=values.get("id"), owner=values.get("owner"), spawns_left=values.get("spawns_left"), x=values.get("x"), y=values.get("y"))
+            self.ai.bases.append(temp)
         if change.get("type") == "Player":
-            temp = game_objects.Player(connection=self.serv_conn, parent_game=self, id=values.get("id"), name=values.get("name"), byte_dollars=values.get("byte_dollars"), cycles=values.get("cycles"), time=values.get("time"))
+            temp = Player(connection=self.serv_conn, parent_game=self, byte_dollars=values.get("byte_dollars"), cycles=values.get("cycles"), id=values.get("id"), name=values.get("name"), time=values.get("time"))
             self.ai.players.append(temp)
         if change.get("type") == "Tile":
-            temp = game_objects.Tile(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"))
+            temp = Tile(connection=self.serv_conn, parent_game=self, id=values.get("id"), owner=values.get("owner"), x=values.get("x"), y=values.get("y"))
             self.ai.tiles.append(temp)
-        if change.get("type") == "Base":
-            temp = game_objects.Base(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"), spawns_left=values.get("spawns_left"))
-            self.ai.bases.append(temp)
         if change.get("type") == "Virus":
-            temp = game_objects.Virus(connection=self.serv_conn, parent_game=self, id=values.get("id"), x=values.get("x"), y=values.get("y"), owner=values.get("owner"), level=values.get("level"), moves_left=values.get("moves_left"), living=values.get("living"))
+            temp = Virus(connection=self.serv_conn, parent_game=self, id=values.get("id"), level=values.get("level"), living=values.get("living"), moves_left=values.get("moves_left"), owner=values.get("owner"), x=values.get("x"), y=values.get("y"))
             self.ai.viruses.append(temp)
         return True
 
     #Parse the remove action.
     def change_remove(self, change):
         remove_id = change.get("id")
+        for base in self.ai.bases:
+            if base.id == remove_id:
+                self.ai.bases.remove(base)
+                return True
         for player in self.ai.players:
             if player.id == remove_id:
                 self.ai.players.remove(player)
@@ -175,10 +184,6 @@ class Game:
         for tile in self.ai.tiles:
             if tile.id == remove_id:
                 self.ai.tiles.remove(tile)
-                return True
-        for base in self.ai.bases:
-            if base.id == remove_id:
-                self.ai.bases.remove(base)
                 return True
         for virus in self.ai.viruses:
             if virus.id == remove_id:
@@ -190,6 +195,10 @@ class Game:
     def change_update(self, change):
         change_id = change.get("id")
         values = change.get("values")
+        for base in self.ai.bases:
+            if base.id == change_id:
+                base.__dict__.update(values)
+                return True
         for player in self.ai.players:
             if player.id == change_id:
                 player.__dict__.update(values)
@@ -197,10 +206,6 @@ class Game:
         for tile in self.ai.tiles:
             if tile.id == change_id:
                 tile.__dict__.update(values)
-                return True
-        for base in self.ai.bases:
-            if base.id == change_id:
-                base.__dict__.update(values)
                 return True
         for virus in self.ai.viruses:
             if virus.id == change_id:

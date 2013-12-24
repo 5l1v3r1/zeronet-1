@@ -5,7 +5,7 @@ class Game(game_objects.Game):
     _name = 'botnet'
     _game_version = 1
     _server_version = 1
-    _globals = ['turn_number', 'player_id', 'game_number', 'base_cost', 'scale_cost', 'width', 'height']
+    _globals = ['base_cost', 'game_number', 'height', 'player_id', 'scale_cost', 'turn_number', 'width']
     _relations = {}
     _remotes = {}
 
