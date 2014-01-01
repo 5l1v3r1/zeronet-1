@@ -26,8 +26,13 @@ def make_template(name, destination):
     run_codegen(source, destination)
 
 def run_codegen(templates, destination):
-    python3('.components/codegen/gen.py', template=templates,
-            output=destination)
+    print('Running codegen')
+
+    print(
+        python3('.components/codegen/gen.py', template=templates,
+            output=destination,
+            )
+        )
 
 def make_all(location = 'components.yaml'):
     data = read_config(location)
