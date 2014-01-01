@@ -17,11 +17,7 @@ class Player(Game.Object):
     def before_turn(self):
         #TODO: Fill in start of turn values
         #Common example would be giving units moves before their turn
-
-        if self.game.turn_number < self.game.turn_limit:
-            self.cycles += self.game.get_income(self.id)
-
-        return True
+        pass
 
     def after_turn(self):
         #TODO: Set post-turn values
@@ -31,6 +27,5 @@ class Player(Game.Object):
     @command
     @takes(message = unicode)
     def talk(self, message = None):
-        print(message)
-        return True
+        pass
 
