@@ -18,12 +18,10 @@ class Tile(Mappable):
     def before_turn(self):
         #TODO: Fill in start of turn values
         #Common example would be giving units moves before their turn
-        self.moves_left = 1
-        return
+        pass
 
     def after_turn(self):
         #TODO: Set post-turn values
         #Common example would be zeroing unit moves after the turn
-        self.moves_left = 0
+        pass
 
-        return

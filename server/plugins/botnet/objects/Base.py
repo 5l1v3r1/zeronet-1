@@ -28,30 +28,5 @@ class Base(Mappable):
     @command
     @takes(level = int)
     def spawn(self, level = None):
-        player = self.game.players[self.owner]
-        cost = self.game.virus_cost(level)
-
-
-        if self.owner != self.game.player_id:
-            return 'Turn {}: You cannot spawn a virus on an opponent\'s base.'.format(self.game.turn_number)
-        elif level == None:
-            return 'Turn {}: You cannot spawn a virus with a level of None.'.format(self.game.turn_number)
-        elif level < 0:
-            return 'Turn {}: You cannot spawn a virus with a level less than zero {}.'.format(self.game.turn_number, level)
-        elif player.cycles < cost:
-            return 'Turn {}: You do not have enough cycles({}) to spawn this virus with cost {}.'.format(self.game.turn_number, player.cycles, cost)
-        elif self.spawns_left <= 0:
-            return 'Turn {}: You can only spawn one virus per turn per base.'.format(self.game.turn_number)
-
-        for virus in self.game.viruses:
-            if virus.x == self.x and virus.y == self.y:
-                return 'Turn {}: You cannot spawn a virus on an occupied base.'.format(self.game.turn_number)
-
-        player.cycles -= cost
-        self.spawns_left -= 1
-
-        new_virus = game_objects.Virus(self, x=x, y=y, level=level, moves_left=0, living=True)
-
-        return True
-
+        pass
 
