@@ -4,10 +4,6 @@ import json
 import client_json
 import game
 from game_object import GameObject
-from .Mappable import Mappable
-from .Mappable import Mappable
-from .Mappable import Mappable
-from .Mappable import Mappable
 
 ## @class Mappable
 #  @brief The base object for all mappable things

@@ -4,10 +4,7 @@ import json
 import client_json
 import game
 from game_object import GameObject
-from .Tile import Tile
-from .Tile import Tile
-from .Tile import Tile
-from .Tile import Tile
+from Mappable import Mappable
 
 ## @class Tile
 class Tile(Mappable):

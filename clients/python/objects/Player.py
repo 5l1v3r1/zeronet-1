@@ -4,10 +4,6 @@ import json
 import client_json
 import game
 from game_object import GameObject
-from .Player import Player
-from .Player import Player
-from .Player import Player
-from .Player import Player
 
 ## @class Player
 #  @brief Stores information about a player in the game

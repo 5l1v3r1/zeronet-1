@@ -4,10 +4,7 @@ import json
 import client_json
 import game
 from game_object import GameObject
-from .Base import Base
-from .Base import Base
-from .Base import Base
-from .Base import Base
+from Mappable import Mappable
 
 ## @class Base
 #  @brief The information on the base
