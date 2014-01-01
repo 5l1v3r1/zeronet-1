@@ -2,9 +2,10 @@ import operator
 import utility
 import json
 import client_json
+import json
 import game
 from game_object import GameObject
-from Mappable import Mappable
+from .Mappable import Mappable
 
 ## @class Virus
 #  @brief Stores the information about a virus
