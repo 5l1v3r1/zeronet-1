@@ -1,3 +1,4 @@
+from .game_object import GameObject
 from .Mappable import Mappable
 from .Base import Base
 from .Player import Player
