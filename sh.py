@@ -112,7 +112,8 @@ class ErrorReturnCode(Exception):
             
         if self.stderr is None: tstderr = "<redirected>"
         else:
-            tstderr = self.stderr[:self.truncate_cap]
+            #tstderr = self.stderr[:self.truncate_cap]
+            tstderr = self.stderr
             err_delta = len(self.stderr) - len(tstderr)
             if err_delta: 
                 tstderr += ("... (%d more, please see e.stderr)" % err_delta).encode()

@@ -6,7 +6,7 @@ class Game(game_objects.Game):
     _name = 'botnet'
     _game_version = 1
     _server_version = 1
-    _globals = ['turn_number', 'player_id', 'game_number', 'base_cost', 'scale_cost', 'width', 'height']
+    _globals = ['base_cost', 'game_number', 'height', 'player_id', 'scale_cost', 'turn_number', 'width']
     _relations = {}
     _remotes = {}
 
@@ -69,7 +69,7 @@ class Game(game_objects.Game):
 
             if isvalid:
                 base1 = objects.Base(self, x=randx, y=randy, owner=0, spawns_left=1)
-                base1 = objects.Base(self, x=otherx, y=randy, owner=1, spawns_left=1)
+                base2 = objects.Base(self, x=otherx, y=randy, owner=1, spawns_left=1)
 
         return True
 
