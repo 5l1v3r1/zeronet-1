@@ -18,13 +18,13 @@ class Mappable(game_object.GameObject):
 
 
     @property
-    def id(self)
+    def id(self):
         return self.id
     @property
-    def x(self)
+    def x(self):
         return self.x
     @property
-    def y(self)
+    def y(self):
         return self.y
 
 

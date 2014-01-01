@@ -47,19 +47,19 @@ class Player(game_object.GameObject):
         return status
 
     @property
-    def byte_dollars(self)
+    def byte_dollars(self):
         return self.byte_dollars
     @property
-    def cycles(self)
+    def cycles(self):
         return self.cycles
     @property
-    def id(self)
+    def id(self):
         return self.id
     @property
-    def name(self)
+    def name(self):
         return self.name
     @property
-    def time(self)
+    def time(self):
         return self.time
 
 
