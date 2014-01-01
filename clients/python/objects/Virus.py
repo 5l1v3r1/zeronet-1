@@ -3,7 +3,12 @@ import utility
 import json
 import client_json
 import game
-import game_object
+from game_object import GameObject
+from . import Mappable
+from . import Base
+from . import Player
+from . import Tile
+from . import Virus
 
 ## @class Virus
 #  @brief Stores the information about a virus

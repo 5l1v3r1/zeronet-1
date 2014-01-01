@@ -3,28 +3,37 @@ import utility
 import json
 import client_json
 import game
-import game_object
+from game_object import GameObject
+from . import Mappable
+from . import Base
+from . import Player
+from . import Tile
+from . import Virus
 
-## @class Base
-#  @brief The information on the base
-class Base(Mappable):
+## @class Virus
+#  @brief Stores the information about a virus
+class Virus(Mappable):
 
-    def __init__(self, connection, parent_game, id, owner, spawns_left, x, y):
+    def __init__(self, connection, parent_game, id, level, living, moves_left, owner, x, y):
         self._connection = connection
         self._parent_game = parent_game
         self._id = id
+        self._level = level
+        self._living = living
+        self._moves_left = moves_left
         self._owner = owner
-        self._spawns_left = spawns_left
         self._x = x
         self._y = y
 
-    ## @fn spawn
-    #  @brief Creates a Virus on the base with certain level.
-    def spawn(self, level):
+    ## @fn move
+    #  @param x The x coordinate to move to
+    #  @param y The y coordinate to move to
+    def move(self, x, y):
         function_call = client_json.function_call.copy()
-        function_call.update({"type": 'spawn'})
+        function_call.update({"type": 'move'})
         function_call.get("args").update({"actor": self.id})
-        function_call.get("args").update({'level': repr(level)})
+        function_call.get("args").update({'x': repr(x)})
+        function_call.get("args").update({'y': repr(y)})
 
         utility.send_string(self._connection, json.dumps(function_call))
 
@@ -49,11 +58,17 @@ class Base(Mappable):
     def id(self):
         return self.id
     @property
+    def level(self):
+        return self.level
+    @property
+    def living(self):
+        return self.living
+    @property
+    def moves_left(self):
+        return self.moves_left
+    @property
     def owner(self):
         return self.owner
-    @property
-    def spawns_left(self):
-        return self.spawns_left
     @property
     def x(self):
         return self.x

@@ -3,29 +3,37 @@ import utility
 import json
 import client_json
 import game
-import game_object
+from game_object import GameObject
+from . import Mappable
+from . import Base
+from . import Player
+from . import Tile
+from . import Virus
 
-## @class Player
-#  @brief Stores information about a player in the game
-class Player(game_object.GameObject):
+## @class Virus
+#  @brief Stores the information about a virus
+class Virus(Mappable):
 
-    def __init__(self, connection, parent_game, byte_dollars, cycles, id, name, time):
+    def __init__(self, connection, parent_game, id, level, living, moves_left, owner, x, y):
         self._connection = connection
         self._parent_game = parent_game
-        self._byte_dollars = byte_dollars
-        self._cycles = cycles
         self._id = id
-        self._name = name
-        self._time = time
+        self._level = level
+        self._living = living
+        self._moves_left = moves_left
+        self._owner = owner
+        self._x = x
+        self._y = y
 
-    ## @fn talk
-    #  @brief Allows a player to display a message to the screen
-    #  @param message The message that the player should say
-    def talk(self, message):
+    ## @fn move
+    #  @param x The x coordinate to move to
+    #  @param y The y coordinate to move to
+    def move(self, x, y):
         function_call = client_json.function_call.copy()
-        function_call.update({"type": 'talk'})
+        function_call.update({"type": 'move'})
         function_call.get("args").update({"actor": self.id})
-        function_call.get("args").update({'message': repr(message)})
+        function_call.get("args").update({'x': repr(x)})
+        function_call.get("args").update({'y': repr(y)})
 
         utility.send_string(self._connection, json.dumps(function_call))
 
@@ -47,20 +55,26 @@ class Player(game_object.GameObject):
         return status
 
     @property
-    def byte_dollars(self):
-        return self.byte_dollars
-    @property
-    def cycles(self):
-        return self.cycles
-    @property
     def id(self):
         return self.id
     @property
-    def name(self):
-        return self.name
+    def level(self):
+        return self.level
     @property
-    def time(self):
-        return self.time
+    def living(self):
+        return self.living
+    @property
+    def moves_left(self):
+        return self.moves_left
+    @property
+    def owner(self):
+        return self.owner
+    @property
+    def x(self):
+        return self.x
+    @property
+    def y(self):
+        return self.y
 
 
 
