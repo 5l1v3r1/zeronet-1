@@ -2,8 +2,10 @@ import operator
 import utility
 import json
 import client_json
+import json
 import game
-import game_object
+from game_object import GameObject
+from .Mappable import Mappable
 
 ## @class Tile
 class Tile(Mappable):
@@ -18,16 +20,16 @@ class Tile(Mappable):
 
 
     @property
-    def id(self)
+    def id(self):
         return self.id
     @property
-    def owner(self)
+    def owner(self):
         return self.owner
     @property
-    def x(self)
+    def x(self):
         return self.x
     @property
-    def y(self)
+    def y(self):
         return self.y
 
 

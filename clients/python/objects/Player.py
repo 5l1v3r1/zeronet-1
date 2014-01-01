@@ -2,12 +2,13 @@ import operator
 import utility
 import json
 import client_json
+import json
 import game
-import game_object
+from game_object import GameObject
 
 ## @class Player
 #  @brief Stores information about a player in the game
-class Player(game_object.GameObject):
+class Player(GameObject):
 
     def __init__(self, connection, parent_game, byte_dollars, cycles, id, name, time):
         self._connection = connection
@@ -47,19 +48,19 @@ class Player(game_object.GameObject):
         return status
 
     @property
-    def byte_dollars(self)
+    def byte_dollars(self):
         return self.byte_dollars
     @property
-    def cycles(self)
+    def cycles(self):
         return self.cycles
     @property
-    def id(self)
+    def id(self):
         return self.id
     @property
-    def name(self)
+    def name(self):
         return self.name
     @property
-    def time(self)
+    def time(self):
         return self.time
 
 

@@ -1,5 +1,6 @@
 # -*- python -*-
 import socket
+import objects
 
 ## @class BaseAI
 #  @brief Class to store competitor-accessible data and functions

@@ -2,8 +2,10 @@ import operator
 import utility
 import json
 import client_json
+import json
 import game
-import game_object
+from game_object import GameObject
+from .Mappable import Mappable
 
 ## @class Virus
 #  @brief Stores the information about a virus
@@ -50,25 +52,25 @@ class Virus(Mappable):
         return status
 
     @property
-    def id(self)
+    def id(self):
         return self.id
     @property
-    def level(self)
+    def level(self):
         return self.level
     @property
-    def living(self)
+    def living(self):
         return self.living
     @property
-    def moves_left(self)
+    def moves_left(self):
         return self.moves_left
     @property
-    def owner(self)
+    def owner(self):
         return self.owner
     @property
-    def x(self)
+    def x(self):
         return self.x
     @property
-    def y(self)
+    def y(self):
         return self.y
 
 
