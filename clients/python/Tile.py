@@ -5,7 +5,7 @@ import client_json
 import json
 import game
 from game_object import GameObject
-from .Mappable import Mappable
+from Mappable import Mappable
 
 ## @class Tile
 class Tile(Mappable):

@@ -1,6 +1,10 @@
 # -*- python -*-
 import socket
-import objects
+from Mappable import Mappable
+from Base import Base
+from Player import Player
+from Tile import Tile
+from Virus import Virus
 
 ## @class BaseAI
 #  @brief Class to store competitor-accessible data and functions
