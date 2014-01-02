@@ -24,6 +24,7 @@ class AI(BaseAI):
         for virus in self.viruses:
             offsets = [(0,1),(0,-1),(1,0),(-1,0)]
             virus.move(random.choice(offsets))
+
         return True
 
     def __init__(self):
