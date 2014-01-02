@@ -53,25 +53,25 @@ class Virus(Mappable):
 
     @property
     def id(self):
-        return self.id
+        return self._id
     @property
     def level(self):
-        return self.level
+        return self._level
     @property
     def living(self):
-        return self.living
+        return self._living
     @property
     def moves_left(self):
-        return self.moves_left
+        return self._moves_left
     @property
     def owner(self):
-        return self.owner
+        return self._owner
     @property
     def x(self):
-        return self.x
+        return self._x
     @property
     def y(self):
-        return self.y
+        return self._y
 
 
 

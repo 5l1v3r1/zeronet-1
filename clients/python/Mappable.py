@@ -20,13 +20,13 @@ class Mappable(GameObject):
 
     @property
     def id(self):
-        return self.id
+        return self._id
     @property
     def x(self):
-        return self.x
+        return self._x
     @property
     def y(self):
-        return self.y
+        return self._y
 
 
 

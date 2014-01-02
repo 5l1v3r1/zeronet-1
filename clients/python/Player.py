@@ -49,19 +49,19 @@ class Player(GameObject):
 
     @property
     def byte_dollars(self):
-        return self.byte_dollars
+        return self._byte_dollars
     @property
     def cycles(self):
-        return self.cycles
+        return self._cycles
     @property
     def id(self):
-        return self.id
+        return self._id
     @property
     def name(self):
-        return self.name
+        return self._name
     @property
     def time(self):
-        return self.time
+        return self._time
 
 
 
