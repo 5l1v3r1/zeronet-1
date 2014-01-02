@@ -49,19 +49,19 @@ class Base(Mappable):
 
     @property
     def id(self):
-        return self.id
+        return self._id
     @property
     def owner(self):
-        return self.owner
+        return self._owner
     @property
     def spawns_left(self):
-        return self.spawns_left
+        return self._spawns_left
     @property
     def x(self):
-        return self.x
+        return self._x
     @property
     def y(self):
-        return self.y
+        return self._y
 
 
 
