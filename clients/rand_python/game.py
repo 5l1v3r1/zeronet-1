@@ -155,16 +155,16 @@ class Game:
     def change_add(self, change):
         values = change.get("values")
         if change.get("type") == "Base":
-            temp = objects.Base(connection=self.serv_conn, parent_game=self, id=values.get("id"), owner=values.get("owner"), spawns_left=values.get("spawns_left"), x=values.get("x"), y=values.get("y"))
+            temp = Base(connection=self.serv_conn, parent_game=self, id=values.get("id"), owner=values.get("owner"), spawns_left=values.get("spawns_left"), x=values.get("x"), y=values.get("y"))
             self.ai.bases.append(temp)
         if change.get("type") == "Player":
-            temp = objects.Player(connection=self.serv_conn, parent_game=self, byte_dollars=values.get("byte_dollars"), cycles=values.get("cycles"), id=values.get("id"), name=values.get("name"), time=values.get("time"))
+            temp = Player(connection=self.serv_conn, parent_game=self, byte_dollars=values.get("byte_dollars"), cycles=values.get("cycles"), id=values.get("id"), name=values.get("name"), time=values.get("time"))
             self.ai.players.append(temp)
         if change.get("type") == "Tile":
-            temp = objects.Tile(connection=self.serv_conn, parent_game=self, id=values.get("id"), owner=values.get("owner"), x=values.get("x"), y=values.get("y"))
+            temp = Tile(connection=self.serv_conn, parent_game=self, id=values.get("id"), owner=values.get("owner"), x=values.get("x"), y=values.get("y"))
             self.ai.tiles.append(temp)
         if change.get("type") == "Virus":
-            temp = objects.Virus(connection=self.serv_conn, parent_game=self, id=values.get("id"), level=values.get("level"), living=values.get("living"), moves_left=values.get("moves_left"), owner=values.get("owner"), x=values.get("x"), y=values.get("y"))
+            temp = Virus(connection=self.serv_conn, parent_game=self, id=values.get("id"), level=values.get("level"), living=values.get("living"), moves_left=values.get("moves_left"), owner=values.get("owner"), x=values.get("x"), y=values.get("y"))
             self.ai.viruses.append(temp)
         return True
 

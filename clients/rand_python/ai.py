@@ -1,7 +1,6 @@
 # -*- python -*-
 from base_ai import BaseAI
-import random
-
+#update
 ## @class AI
 #  @brief Class to implement competitor code
 
@@ -22,10 +21,10 @@ class AI(BaseAI):
     def run(self):
 
         for virus in self.viruses:
-            offsets = [(0,1),(0,-1),(1,0),(-1,0)]
-            virus.move(random.choice(offsets))
+            if virus.owner == self.my_player_id:
+                offsets = [(0,1),(1,0), (-1,0), (0,-1)]
 
-        return True
+        pass
 
     def __init__(self):
         BaseAI.__init__(self)
